@@ -69,6 +69,25 @@ These instructions will get you a copy of the Blockchain-Capstone.app and lets y
 
     **Enjoy!**
 
+### Running the Tests
+
+1. Install ganache-cli
+
+    ```
+    $ npm install -g ganache-cli
+    ```
+
+2. Open a seperate terminal window and run ganache-cli:
+
+    ```
+    ganache-cli
+    ```
+
+3. Run the tests:
+
+    ```
+    truffle test
+    ```
 
 ## Built With
 
