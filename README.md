@@ -16,93 +16,25 @@ Marketplace: https://rinkeby.opensea.io/assets/real-estate-listing-v3
 
 ## Getting Started
 
-These instructions will get you a copy of the FlightSurety.app and lets you run the client on the local machine and deploys your own contract to the test network rinkeby.
+These instructions will get you a copy of the Blockchain-Capstone.app and lets you run the client on the local machine and deploys your own contract to the test network rinkeby.
 
-### Prerequisites
+### Installing and Using the Blockchain-Capstone Contracts for Yourself on the RINKEBY TESTNETWORK
 
-Please make sure you've enabled [MetaMask extension](https://metamask.io/) in your browser and [gulp](https://gulpjs.com/) installed.
-
-### Installing and Using the FlightSurety Contracts for Yourself on the RINKEBY TESTNETWORK
-
-#### Client Setup
+#### Server Setup
 
 1. Clone this repository:
 
     ```bash
-    $ git clone https://github.com/Userrick/FlightSurety
+    $ git clone https://github.com/Userrick/Blockchain-Capstone
     ```
 
-2. Got to Flightsurety/client/ and install all requisite npm packages (as listed in ```package.json```):
+2. Got to Blockchain-Capstone/server/ and install all requisite npm packages (as listed in ```package.json```):
 
     ```bash
     $ npm install
     ```
 
-3. Create a new file in **FlightSurety/client/src/blockchain/** with the name **migration-secrets.js**:
-
-    ```bash
-    $ touch migration-secrets.js
-    ```
-4. Install truffle-hdwallet-provider in **FlightSurety/client/src/blockchain/**: 
-
-    ```bash
-    $ npm install
-    ```
-
-5. Copy the following into it (attention to https://):
-
-    ```javascript
-    const secrets = {
-        address: "YOUR ADDRESS WHICH WILL ALSO BE THE FIRST ADMIN OF FLIGHTSURETYDATA CONTRACT"
-        mnemonic: "YOUR-SEED-WORDS-FROM-METAMASK-ACCOUNT",
-        ENDPOINT: "https://YOUR-INFURA-ENDPOINT_KEY"
-    }
-
-    module.exports = secrets;
-    ```
-
-6. Follow [this guide](https://metamask.zendesk.com/hc/en-us/articles/360015290032-How-to-Reveal-Your-Seed-Phrase) to reveal your seed words from your METAMASK account. 
-
-    a) **Be sure to be on the rinkeby testnetwork**
-
-    b) Copy your seed words from your METAMASK into the respective marked section of the **secrets-migration.js** file
-
-
-7. Visit the [infura website](https://www.infura.io) 
-
-    a) login or create account
-
-    b) create a new project 
-
-    c) COPY the endpoint from the project to clipboard
-
-    ![INFURA-key](https://github.com/Userrick/Simple-Supply-Chain-Udacity/blob/master/tutorial-images/INFURA-key.PNG)
-
-    d) PASTE it into the respective field in the **secrets-migration.js** file
-
-8. Now launch your personal flight insurance contracts to the network by following these commands:
-
-    ```bash
-    $ truffle compile
-
-    $ truffle migrate --reset --network rinkeby
-    ```
-
-9. Now launch the client by the following command:
-
-    ```bash
-    $ npm start
-    ```
-
-#### Client Setup
-
-1. Got to Flightsurety/server/ and install all requisite npm packages (as listed in ```package.json```):
-
-    ```bash
-    $ npm install
-    ```
-
-2. Create a new file in **FlightSurety/server/** with the name **secrets.js**:
+2. Create a new file in **Blockchain-Capstone/server/** with the name **secrets.js**:
 
     ```bash
     $ touch secrets.js
@@ -120,19 +52,12 @@ Please make sure you've enabled [MetaMask extension](https://metamask.io/) in yo
     module.exports = secrets;
     ```
 
-4. Edit the **config.js** file in Flightsurety/server/ to your needs 
+4. Edit the **config.js** file in Blockchain-Capstone/server/ to your needs 
 
     Make sure to use the same address as for deploying your smart contract!
 
-5. Install MongoDB from [MONGODB](https://www.mongodb.com/)
 
-6. Open New Terminal and run: 
-
-    ```bash
-    $ mongod
-    ```
-
-7. Now launch the server by the following command in a new terminal and wait until every oracle of the 40 are registered:
+5. Now launch the server by the following command in a new terminal and wait until every token is mint.
 
     ```bash
     $ npm run dev
@@ -144,9 +69,6 @@ Please make sure you've enabled [MetaMask extension](https://metamask.io/) in yo
 
     **Enjoy!**
 
-### Testing without losing too much eth and for that oracles from server work properly on rinkeby
-
-1. Make sure to search for all the comments in the FlightSuretyApp and FlightSuretyData contract marked with ///@dev and comment the direct below require statement out.
 
 ## Built With
 
@@ -154,9 +76,6 @@ Please make sure you've enabled [MetaMask extension](https://metamask.io/) in yo
 * [Truffle Framework](http://truffleframework.com/) - Truffle is the most popular development framework for Ethereum with a mission to make your life a whole lot easier. 
 * [truffle-hdwallet-provider](https://github.com/trufflesuite/truffle-hdwallet-provider) - HD Wallet-enabled Web3 provider. Use it to sign transactions for addresses derived from a 12-word mnemonic.
 * [NODE + NPM](https://github.com/nodejs/node)
-* [MONGODB](https://www.mongodb.com/) - The database for modern applications
-* [REACT](https://reactjs.org/) - A JavaScript library for building user interfaces
-* [REACT-Bootstrap](https://react-bootstrap.github.io/) - The most popular front-end framework Rebuilt for React. 
 
 ## Version Used
 
@@ -167,7 +86,7 @@ Please make sure you've enabled [MetaMask extension](https://metamask.io/) in yo
 
 ## Authors
 
-Starter code was provided by [Udacity](https://github.com/udacity/FlightSurety)
+Starter code was provided by [Udacity](https://github.com/udacity/Blockchain-Capstone)
 
 # Project Resources
 
