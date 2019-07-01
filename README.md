@@ -6,6 +6,7 @@ Contract address of Verifier.sol: https://ropsten.etherscan.io/address/0xd2eb434
 
 Contract address of Real Estate Listing: https://rinkeby.etherscan.io/token/0x074148e8df9f30f99c1705f846d72d2a350f160c
 
+The **contract ABIs** are located in the corresponding .json files under the folder build/contracts
 
 # CAPSTONE PROJECT
 
@@ -64,8 +65,15 @@ These instructions will get you a copy of the Blockchain-Capstone.app and lets y
     ```
     Make sure to change the tokenId in the config folder every time before minting a new one!
 
+5. Now launch your contracts to the network by following these commands in the directors eth-contracts:
 
-5. Now launch the server by the following command in a new terminal and wait until every token is mint.
+    ```bash
+    $ truffle compile
+
+    $ truffle migrate --reset --network rinkeby
+    ```
+
+6. Now launch the server by the following command in a new terminal and wait until every token is mint.
 
     ```bash
     $ npm run dev

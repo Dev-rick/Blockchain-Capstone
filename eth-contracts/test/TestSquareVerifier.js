@@ -7,6 +7,15 @@ let squareVerifier = artifacts.require('SquareVerifier');
 
 let correctProof = require('../../zokrates/code/proof');
 
+const incorrectProof = {
+    "proof": {
+        "a": ["0x0bfb922fbb212989587a4419a92762dd88aa12260d10aa7479fbbfc646eed202", "0x2bb576943370c9374cc55e54d2e3994792191264c905299bdcf61feb93a80ba8"],
+        "b": [["0x210ebd07a9608899149fccdbb202d449e10b3501a839b7983f57993c4bd86117", "0x2f1f346013315e87ddb7844c8db46d263e7e36c0d2eb1d5d78e89b4c910279a9"], ["0x0517e1a3a01db6e3faee77d7ee4eeceedcad5105dafde7933efd1d7713d74d48", "0x26ef8439e217761454f7e7d02582dd7a77b85c56c9898adaeb6ed253da925710"]],
+        "c": ["0x21892f70ae76efbccd98f49dd309cc3d8055da2e1572465aeb62efa4102756cd", "0x28d026c0a930bb90101714cd2b84e27c411ace89b747063fe5bd69be4360e869"]
+    },
+    "inputs": ["0x00000000000000000000000000000000000000000000000000000000000000a1", "0x0000000000000000000000000000000000000000000000000000000000000002"]
+}
+
 contract('TestSquareVerifier', accounts => {
 
     const account_one = accounts[0];
@@ -17,7 +26,12 @@ contract('TestSquareVerifier', accounts => {
 
     it('verification with correct proof',async function(){
         let verified = await this.contract.verifyTx.call(correctProof.proof.a, correctProof.proof.b, correctProof.proof.c, correctProof.inputs, {from:account_one});
-        assert.equal(verified,true,"verification is valid");
+        assert.equal(verified,true,"verification is invalid");
+    })
+
+    it('verification with incorrect proof',async function(){
+        let verified = await this.contract.verifyTx.call(incorrectProof.proof.a, incorrectProof.proof.b, incorrectProof.proof.c, incorrectProof.inputs, {from:account_one});
+        assert.equal(verified,false ,"verification is valid");
     })
 
 });
