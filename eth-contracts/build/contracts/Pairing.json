@@ -1,12 +1,12 @@
 {
   "contractName": "Pairing",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.8+commit.23d335f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/c/Users/rickw/Development/Blockchain-Projects/Blockchain-Capstone/eth-contracts/contracts/Verifier.sol\":\"Pairing\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/c/Users/rickw/Development/Blockchain-Projects/Blockchain-Capstone/eth-contracts/contracts/Verifier.sol\":{\"keccak256\":\"0xbd6fa9d6001445f89a5a0ab618207b32f310db807afececba56be65b30b45845\",\"urls\":[\"bzzr://6fd96b55827acefafdd945529a7e948d89bd0186b8a2cde30894a179c51bc813\"]}},\"version\":1}",
-  "bytecode": "0x604c6023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820b89f13eb3e688cf4ac49da17d023c9dbc4e4903b178a946ea6f13216f2756f8a0029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820b89f13eb3e688cf4ac49da17d023c9dbc4e4903b178a946ea6f13216f2756f8a0029",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.8+commit.23d335f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/c/Users/rickw/Development/Blockchain-Projects/Blockchain-Capstone/eth-contracts/contracts/Verifier.sol\":\"Pairing\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/c/Users/rickw/Development/Blockchain-Projects/Blockchain-Capstone/eth-contracts/contracts/Verifier.sol\":{\"keccak256\":\"0xdc748a76cb2185ec9c148ea094d57de130f94c7a64e67f66dd5da52b14beb5b9\",\"urls\":[\"bzzr://0f0f81e302089e6fd5d6ed9480846f4e2e34ca1f503e4cbca4666fcc062e2d73\"]}},\"version\":1}",
+  "bytecode": "0x604c6023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820b4bdc16c79d6c92aa492ebc76f7373ea530c87a832442ff30fae1e373a0c13aa0029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820b4bdc16c79d6c92aa492ebc76f7373ea530c87a832442ff30fae1e373a0c13aa0029",
   "sourceMap": "15120:5334:4:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
   "deployedSourceMap": "15120:5334:4:-;;;;;;;;",
-  "source": "// This file is LGPL3 Licensed\n\n/**\n * @title Elliptic curve operations on twist points for alt_bn128\n * @author Mustafa Al-Bassam (mus@musalbas.com)\n */\nlibrary BN256G2 {\n    uint256 internal constant FIELD_MODULUS = 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47;\n    uint256 internal constant TWISTBX = 0x2b149d40ceb8aaae81be18991be06ac3b5b4c5e559dbefa33267e6dc24a138e5;\n    uint256 internal constant TWISTBY = 0x9713b03af0fed4cd2cafadeed8fdf4a74fa084e52d1852e4a2bd0685c315d2;\n    uint internal constant PTXX = 0;\n    uint internal constant PTXY = 1;\n    uint internal constant PTYX = 2;\n    uint internal constant PTYY = 3;\n    uint internal constant PTZX = 4;\n    uint internal constant PTZY = 5;\n\n    /**\n     * @notice Add two twist points\n     * @param pt1xx Coefficient 1 of x on point 1\n     * @param pt1xy Coefficient 2 of x on point 1\n     * @param pt1yx Coefficient 1 of y on point 1\n     * @param pt1yy Coefficient 2 of y on point 1\n     * @param pt2xx Coefficient 1 of x on point 2\n     * @param pt2xy Coefficient 2 of x on point 2\n     * @param pt2yx Coefficient 1 of y on point 2\n     * @param pt2yy Coefficient 2 of y on point 2\n     * @return (pt3xx, pt3xy, pt3yx, pt3yy)\n     */\n    function ECTwistAdd(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy\n    ) public pure returns (\n        uint256, uint256,\n        uint256, uint256\n    ) {\n        if (\n            pt1xx == 0 && pt1xy == 0 &&\n            pt1yx == 0 && pt1yy == 0\n        ) {\n            if (!(\n                pt2xx == 0 && pt2xy == 0 &&\n                pt2yx == 0 && pt2yy == 0\n            )) {\n                assert(_isOnCurve(\n                    pt2xx, pt2xy,\n                    pt2yx, pt2yy\n                ));\n            }\n            return (\n                pt2xx, pt2xy,\n                pt2yx, pt2yy\n            );\n        } else if (\n            pt2xx == 0 && pt2xy == 0 &&\n            pt2yx == 0 && pt2yy == 0\n        ) {\n            assert(_isOnCurve(\n                pt1xx, pt1xy,\n                pt1yx, pt1yy\n            ));\n            return (\n                pt1xx, pt1xy,\n                pt1yx, pt1yy\n            );\n        }\n\n        assert(_isOnCurve(\n            pt1xx, pt1xy,\n            pt1yx, pt1yy\n        ));\n        assert(_isOnCurve(\n            pt2xx, pt2xy,\n            pt2yx, pt2yy\n        ));\n\n        uint256[6] memory pt3 = _ECTwistAddJacobian(\n            pt1xx, pt1xy,\n            pt1yx, pt1yy,\n            1,     0,\n            pt2xx, pt2xy,\n            pt2yx, pt2yy,\n            1,     0\n        );\n\n        return _fromJacobian(\n            pt3[PTXX], pt3[PTXY],\n            pt3[PTYX], pt3[PTYY],\n            pt3[PTZX], pt3[PTZY]\n        );\n    }\n\n    /**\n     * @notice Multiply a twist point by a scalar\n     * @param s     Scalar to multiply by\n     * @param pt1xx Coefficient 1 of x\n     * @param pt1xy Coefficient 2 of x\n     * @param pt1yx Coefficient 1 of y\n     * @param pt1yy Coefficient 2 of y\n     * @return (pt2xx, pt2xy, pt2yx, pt2yy)\n     */\n    function ECTwistMul(\n        uint256 s,\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy\n    ) public pure returns (\n        uint256, uint256,\n        uint256, uint256\n    ) {\n        uint256 pt1zx = 1;\n        if (\n            pt1xx == 0 && pt1xy == 0 &&\n            pt1yx == 0 && pt1yy == 0\n        ) {\n            pt1xx = 1;\n            pt1yx = 1;\n            pt1zx = 0;\n        } else {\n            assert(_isOnCurve(\n                pt1xx, pt1xy,\n                pt1yx, pt1yy\n            ));\n        }\n\n        uint256[6] memory pt2 = _ECTwistMulJacobian(\n            s,\n            pt1xx, pt1xy,\n            pt1yx, pt1yy,\n            pt1zx, 0\n        );\n\n        return _fromJacobian(\n            pt2[PTXX], pt2[PTXY],\n            pt2[PTYX], pt2[PTYY],\n            pt2[PTZX], pt2[PTZY]\n        );\n    }\n\n    /**\n     * @notice Get the field modulus\n     * @return The field modulus\n     */\n    function GetFieldModulus() public pure returns (uint256) {\n        return FIELD_MODULUS;\n    }\n\n    function submod(uint256 a, uint256 b, uint256 n) internal pure returns (uint256) {\n        return addmod(a, n - b, n);\n    }\n\n    function _FQ2Mul(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256, uint256) {\n        return (\n            submod(mulmod(xx, yx, FIELD_MODULUS), mulmod(xy, yy, FIELD_MODULUS), FIELD_MODULUS),\n            addmod(mulmod(xx, yy, FIELD_MODULUS), mulmod(xy, yx, FIELD_MODULUS), FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Muc(\n        uint256 xx, uint256 xy,\n        uint256 c\n    ) internal pure returns(uint256, uint256) {\n        return (\n            mulmod(xx, c, FIELD_MODULUS),\n            mulmod(xy, c, FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Add(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256, uint256) {\n        return (\n            addmod(xx, yx, FIELD_MODULUS),\n            addmod(xy, yy, FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Sub(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256 rx, uint256 ry) {\n        return (\n            submod(xx, yx, FIELD_MODULUS),\n            submod(xy, yy, FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Div(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256, uint256) {\n        (yx, yy) = _FQ2Inv(yx, yy);\n        return _FQ2Mul(xx, xy, yx, yy);\n    }\n\n    function _FQ2Inv(uint256 x, uint256 y) internal pure returns(uint256, uint256) {\n        uint256 inv = _modInv(addmod(mulmod(y, y, FIELD_MODULUS), mulmod(x, x, FIELD_MODULUS), FIELD_MODULUS), FIELD_MODULUS);\n        return (\n            mulmod(x, inv, FIELD_MODULUS),\n            FIELD_MODULUS - mulmod(y, inv, FIELD_MODULUS)\n        );\n    }\n\n    function _isOnCurve(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns (bool) {\n        uint256 yyx;\n        uint256 yyy;\n        uint256 xxxx;\n        uint256 xxxy;\n        (yyx, yyy) = _FQ2Mul(yx, yy, yx, yy);\n        (xxxx, xxxy) = _FQ2Mul(xx, xy, xx, xy);\n        (xxxx, xxxy) = _FQ2Mul(xxxx, xxxy, xx, xy);\n        (yyx, yyy) = _FQ2Sub(yyx, yyy, xxxx, xxxy);\n        (yyx, yyy) = _FQ2Sub(yyx, yyy, TWISTBX, TWISTBY);\n        return yyx == 0 && yyy == 0;\n    }\n\n    function _modInv(uint256 a, uint256 n) internal pure returns(uint256 t) {\n        t = 0;\n        uint256 newT = 1;\n        uint256 r = n;\n        uint256 newR = a;\n        uint256 q;\n        while (newR != 0) {\n            q = r / newR;\n            (t, newT) = (newT, submod(t, mulmod(q, newT, n), n));\n            (r, newR) = (newR, r - q * newR);\n        }\n    }\n\n    function _fromJacobian(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy\n    ) internal pure returns (\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy\n    ) {\n        uint256 invzx;\n        uint256 invzy;\n        (invzx, invzy) = _FQ2Inv(pt1zx, pt1zy);\n        (pt2xx, pt2xy) = _FQ2Mul(pt1xx, pt1xy, invzx, invzy);\n        (pt2yx, pt2yy) = _FQ2Mul(pt1yx, pt1yy, invzx, invzy);\n    }\n\n    function _ECTwistAddJacobian(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy,\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy,\n        uint256 pt2zx, uint256 pt2zy) internal pure returns (uint256[6] memory pt3) {\n            if (pt1zx == 0 && pt1zy == 0) {\n                (\n                    pt3[PTXX], pt3[PTXY],\n                    pt3[PTYX], pt3[PTYY],\n                    pt3[PTZX], pt3[PTZY]\n                ) = (\n                    pt2xx, pt2xy,\n                    pt2yx, pt2yy,\n                    pt2zx, pt2zy\n                );\n                return pt3;\n            } else if (pt2zx == 0 && pt2zy == 0) {\n                (\n                    pt3[PTXX], pt3[PTXY],\n                    pt3[PTYX], pt3[PTYY],\n                    pt3[PTZX], pt3[PTZY]\n                ) = (\n                    pt1xx, pt1xy,\n                    pt1yx, pt1yy,\n                    pt1zx, pt1zy\n                );\n                return pt3;\n            }\n\n            (pt2yx,     pt2yy)     = _FQ2Mul(pt2yx, pt2yy, pt1zx, pt1zy); // U1 = y2 * z1\n            (pt3[PTYX], pt3[PTYY]) = _FQ2Mul(pt1yx, pt1yy, pt2zx, pt2zy); // U2 = y1 * z2\n            (pt2xx,     pt2xy)     = _FQ2Mul(pt2xx, pt2xy, pt1zx, pt1zy); // V1 = x2 * z1\n            (pt3[PTZX], pt3[PTZY]) = _FQ2Mul(pt1xx, pt1xy, pt2zx, pt2zy); // V2 = x1 * z2\n\n            if (pt2xx == pt3[PTZX] && pt2xy == pt3[PTZY]) {\n                if (pt2yx == pt3[PTYX] && pt2yy == pt3[PTYY]) {\n                    (\n                        pt3[PTXX], pt3[PTXY],\n                        pt3[PTYX], pt3[PTYY],\n                        pt3[PTZX], pt3[PTZY]\n                    ) = _ECTwistDoubleJacobian(pt1xx, pt1xy, pt1yx, pt1yy, pt1zx, pt1zy);\n                    return pt3;\n                }\n                (\n                    pt3[PTXX], pt3[PTXY],\n                    pt3[PTYX], pt3[PTYY],\n                    pt3[PTZX], pt3[PTZY]\n                ) = (\n                    1, 0,\n                    1, 0,\n                    0, 0\n                );\n                return pt3;\n            }\n\n            (pt2zx,     pt2zy)     = _FQ2Mul(pt1zx, pt1zy, pt2zx,     pt2zy);     // W = z1 * z2\n            (pt1xx,     pt1xy)     = _FQ2Sub(pt2yx, pt2yy, pt3[PTYX], pt3[PTYY]); // U = U1 - U2\n            (pt1yx,     pt1yy)     = _FQ2Sub(pt2xx, pt2xy, pt3[PTZX], pt3[PTZY]); // V = V1 - V2\n            (pt1zx,     pt1zy)     = _FQ2Mul(pt1yx, pt1yy, pt1yx,     pt1yy);     // V_squared = V * V\n            (pt2yx,     pt2yy)     = _FQ2Mul(pt1zx, pt1zy, pt3[PTZX], pt3[PTZY]); // V_squared_times_V2 = V_squared * V2\n            (pt1zx,     pt1zy)     = _FQ2Mul(pt1zx, pt1zy, pt1yx,     pt1yy);     // V_cubed = V * V_squared\n            (pt3[PTZX], pt3[PTZY]) = _FQ2Mul(pt1zx, pt1zy, pt2zx,     pt2zy);     // newz = V_cubed * W\n            (pt2xx,     pt2xy)     = _FQ2Mul(pt1xx, pt1xy, pt1xx,     pt1xy);     // U * U\n            (pt2xx,     pt2xy)     = _FQ2Mul(pt2xx, pt2xy, pt2zx,     pt2zy);     // U * U * W\n            (pt2xx,     pt2xy)     = _FQ2Sub(pt2xx, pt2xy, pt1zx,     pt1zy);     // U * U * W - V_cubed\n            (pt2zx,     pt2zy)     = _FQ2Muc(pt2yx, pt2yy, 2);                    // 2 * V_squared_times_V2\n            (pt2xx,     pt2xy)     = _FQ2Sub(pt2xx, pt2xy, pt2zx,     pt2zy);     // A = U * U * W - V_cubed - 2 * V_squared_times_V2\n            (pt3[PTXX], pt3[PTXY]) = _FQ2Mul(pt1yx, pt1yy, pt2xx,     pt2xy);     // newx = V * A\n            (pt1yx,     pt1yy)     = _FQ2Sub(pt2yx, pt2yy, pt2xx,     pt2xy);     // V_squared_times_V2 - A\n            (pt1yx,     pt1yy)     = _FQ2Mul(pt1xx, pt1xy, pt1yx,     pt1yy);     // U * (V_squared_times_V2 - A)\n            (pt1xx,     pt1xy)     = _FQ2Mul(pt1zx, pt1zy, pt3[PTYX], pt3[PTYY]); // V_cubed * U2\n            (pt3[PTYX], pt3[PTYY]) = _FQ2Sub(pt1yx, pt1yy, pt1xx,     pt1xy);     // newy = U * (V_squared_times_V2 - A) - V_cubed * U2\n    }\n\n    function _ECTwistDoubleJacobian(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy\n    ) internal pure returns(\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy,\n        uint256 pt2zx, uint256 pt2zy\n    ) {\n        (pt2xx, pt2xy) = _FQ2Muc(pt1xx, pt1xy, 3);            // 3 * x\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt1xx, pt1xy); // W = 3 * x * x\n        (pt1zx, pt1zy) = _FQ2Mul(pt1yx, pt1yy, pt1zx, pt1zy); // S = y * z\n        (pt2yx, pt2yy) = _FQ2Mul(pt1xx, pt1xy, pt1yx, pt1yy); // x * y\n        (pt2yx, pt2yy) = _FQ2Mul(pt2yx, pt2yy, pt1zx, pt1zy); // B = x * y * S\n        (pt1xx, pt1xy) = _FQ2Mul(pt2xx, pt2xy, pt2xx, pt2xy); // W * W\n        (pt2zx, pt2zy) = _FQ2Muc(pt2yx, pt2yy, 8);            // 8 * B\n        (pt1xx, pt1xy) = _FQ2Sub(pt1xx, pt1xy, pt2zx, pt2zy); // H = W * W - 8 * B\n        (pt2zx, pt2zy) = _FQ2Mul(pt1zx, pt1zy, pt1zx, pt1zy); // S_squared = S * S\n        (pt2yx, pt2yy) = _FQ2Muc(pt2yx, pt2yy, 4);            // 4 * B\n        (pt2yx, pt2yy) = _FQ2Sub(pt2yx, pt2yy, pt1xx, pt1xy); // 4 * B - H\n        (pt2yx, pt2yy) = _FQ2Mul(pt2yx, pt2yy, pt2xx, pt2xy); // W * (4 * B - H)\n        (pt2xx, pt2xy) = _FQ2Muc(pt1yx, pt1yy, 8);            // 8 * y\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt1yx, pt1yy); // 8 * y * y\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt2zx, pt2zy); // 8 * y * y * S_squared\n        (pt2yx, pt2yy) = _FQ2Sub(pt2yx, pt2yy, pt2xx, pt2xy); // newy = W * (4 * B - H) - 8 * y * y * S_squared\n        (pt2xx, pt2xy) = _FQ2Muc(pt1xx, pt1xy, 2);            // 2 * H\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt1zx, pt1zy); // newx = 2 * H * S\n        (pt2zx, pt2zy) = _FQ2Mul(pt1zx, pt1zy, pt2zx, pt2zy); // S * S_squared\n        (pt2zx, pt2zy) = _FQ2Muc(pt2zx, pt2zy, 8);            // newz = 8 * S * S_squared\n    }\n\n    function _ECTwistMulJacobian(\n        uint256 d,\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy\n    ) internal pure returns(uint256[6] memory pt2) {\n        while (d != 0) {\n            if ((d & 1) != 0) {\n                pt2 = _ECTwistAddJacobian(\n                    pt2[PTXX], pt2[PTXY],\n                    pt2[PTYX], pt2[PTYY],\n                    pt2[PTZX], pt2[PTZY],\n                    pt1xx, pt1xy,\n                    pt1yx, pt1yy,\n                    pt1zx, pt1zy);\n            }\n            (\n                pt1xx, pt1xy,\n                pt1yx, pt1yy,\n                pt1zx, pt1zy\n            ) = _ECTwistDoubleJacobian(\n                pt1xx, pt1xy,\n                pt1yx, pt1yy,\n                pt1zx, pt1zy\n            );\n\n            d = d / 2;\n        }\n    }\n}\n\n\n// This file is MIT Licensed.\n//\n// Copyright 2017 Christian Reitwiessner\n// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\npragma solidity ^0.5.0;\nlibrary Pairing {\n    struct G1Point {\n        uint X;\n        uint Y;\n    }\n    // Encoding of field elements is: X[0] * z + X[1]\n    struct G2Point {\n        uint[2] X;\n        uint[2] Y;\n    }\n    /// @return the generator of G1\n    function P1() pure internal returns (G1Point memory) {\n        return G1Point(1, 2);\n    }\n    /// @return the generator of G2\n    function P2() pure internal returns (G2Point memory) {\n        return G2Point(\n            [11559732032986387107991004021392285783925812861821192530917403151452391805634,\n             10857046999023057135944570762232829481370756359578518086990519993285655852781],\n            [4082367875863433681332203403145435568316851327593401208105741076214120093531,\n             8495653923123431417604973247489272438418190587263600148770280649306958101930]\n        );\n    }\n    /// @return the negation of p, i.e. p.addition(p.negate()) should be zero.\n    function negate(G1Point memory p) pure internal returns (G1Point memory) {\n        // The prime q in the base field F_q for G1\n        uint q = 21888242871839275222246405745257275088696311157297823662689037894645226208583;\n        if (p.X == 0 && p.Y == 0)\n            return G1Point(0, 0);\n        return G1Point(p.X, q - (p.Y % q));\n    }\n    /// @return the sum of two points of G1\n    function addition(G1Point memory p1, G1Point memory p2) internal returns (G1Point memory r) {\n        uint[4] memory input;\n        input[0] = p1.X;\n        input[1] = p1.Y;\n        input[2] = p2.X;\n        input[3] = p2.Y;\n        bool success;\n        assembly {\n            success := call(sub(gas, 2000), 6, 0, input, 0xc0, r, 0x60)\n            // Use \"invalid\" to make gas estimation work\n            switch success case 0 { invalid() }\n        }\n        require(success);\n    }\n    /// @return the sum of two points of G2\n    function addition(G2Point memory p1, G2Point memory p2) internal pure returns (G2Point memory r) {\n        (r.X[1], r.X[0], r.Y[1], r.Y[0]) = BN256G2.ECTwistAdd(p1.X[1],p1.X[0],p1.Y[1],p1.Y[0],p2.X[1],p2.X[0],p2.Y[1],p2.Y[0]);\n    }\n    /// @return the product of a point on G1 and a scalar, i.e.\n    /// p == p.scalar_mul(1) and p.addition(p) == p.scalar_mul(2) for all points p.\n    function scalar_mul(G1Point memory p, uint s) internal returns (G1Point memory r) {\n        uint[3] memory input;\n        input[0] = p.X;\n        input[1] = p.Y;\n        input[2] = s;\n        bool success;\n        assembly {\n            success := call(sub(gas, 2000), 7, 0, input, 0x80, r, 0x60)\n            // Use \"invalid\" to make gas estimation work\n            switch success case 0 { invalid() }\n        }\n        require (success);\n    }\n    /// @return the result of computing the pairing check\n    /// e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1\n    /// For example pairing([P1(), P1().negate()], [P2(), P2()]) should\n    /// return true.\n    function pairing(G1Point[] memory p1, G2Point[] memory p2) internal returns (bool) {\n        require(p1.length == p2.length);\n        uint elements = p1.length;\n        uint inputSize = elements * 6;\n        uint[] memory input = new uint[](inputSize);\n        for (uint i = 0; i < elements; i++)\n        {\n            input[i * 6 + 0] = p1[i].X;\n            input[i * 6 + 1] = p1[i].Y;\n            input[i * 6 + 2] = p2[i].X[0];\n            input[i * 6 + 3] = p2[i].X[1];\n            input[i * 6 + 4] = p2[i].Y[0];\n            input[i * 6 + 5] = p2[i].Y[1];\n        }\n        uint[1] memory out;\n        bool success;\n        assembly {\n            success := call(sub(gas, 2000), 8, 0, add(input, 0x20), mul(inputSize, 0x20), out, 0x20)\n            // Use \"invalid\" to make gas estimation work\n            switch success case 0 { invalid() }\n        }\n        require(success);\n        return out[0] != 0;\n    }\n    /// Convenience method for a pairing check for two pairs.\n    function pairingProd2(G1Point memory a1, G2Point memory a2, G1Point memory b1, G2Point memory b2) internal returns (bool) {\n        G1Point[] memory p1 = new G1Point[](2);\n        G2Point[] memory p2 = new G2Point[](2);\n        p1[0] = a1;\n        p1[1] = b1;\n        p2[0] = a2;\n        p2[1] = b2;\n        return pairing(p1, p2);\n    }\n    /// Convenience method for a pairing check for three pairs.\n    function pairingProd3(\n            G1Point memory a1, G2Point memory a2,\n            G1Point memory b1, G2Point memory b2,\n            G1Point memory c1, G2Point memory c2\n    ) internal returns (bool) {\n        G1Point[] memory p1 = new G1Point[](3);\n        G2Point[] memory p2 = new G2Point[](3);\n        p1[0] = a1;\n        p1[1] = b1;\n        p1[2] = c1;\n        p2[0] = a2;\n        p2[1] = b2;\n        p2[2] = c2;\n        return pairing(p1, p2);\n    }\n    /// Convenience method for a pairing check for four pairs.\n    function pairingProd4(\n            G1Point memory a1, G2Point memory a2,\n            G1Point memory b1, G2Point memory b2,\n            G1Point memory c1, G2Point memory c2,\n            G1Point memory d1, G2Point memory d2\n    ) internal returns (bool) {\n        G1Point[] memory p1 = new G1Point[](4);\n        G2Point[] memory p2 = new G2Point[](4);\n        p1[0] = a1;\n        p1[1] = b1;\n        p1[2] = c1;\n        p1[3] = d1;\n        p2[0] = a2;\n        p2[1] = b2;\n        p2[2] = c2;\n        p2[3] = d2;\n        return pairing(p1, p2);\n    }\n}\n\ncontract Verifier {\n    using Pairing for *;\n    struct VerifyingKey {\n        Pairing.G1Point a;\n        Pairing.G2Point b;\n        Pairing.G2Point gamma;\n        Pairing.G2Point delta;\n        Pairing.G1Point[] gammaABC;\n    }\n    struct Proof {\n        Pairing.G1Point A;\n        Pairing.G2Point B;\n        Pairing.G1Point C;\n    }\n    function verifyingKey() pure internal returns (VerifyingKey memory vk) {\n        vk.a = Pairing.G1Point(uint256(0x291a5f798f9e99e27c83fe3dd634fdbc99c6265d8b17f48b4fc8380049eac6fb), uint256(0x1a34bf1cb05689e619dc905611946f16a862285862c6056520643cce8d34e460));\n        vk.b = Pairing.G2Point([uint256(0x2e39fe5ab6ee2ca839f796c861ac3d9a90c04bcebb9347fc7745607deab58207), uint256(0x27a0d224b0fe4fb9ad21036028361c7eb2c2b489e2696a65c83ce968f33e395d)], [uint256(0x0b2183cead00a2ea1f5ed4141e0286802685f6e1b51bece18df0f810650a7887), uint256(0x1f62c28f951ad3cffeac4fba02451e8c05600f922d57adddf03fd5c0f409af7b)]);\n        vk.gamma = Pairing.G2Point([uint256(0x098bba850d638e3696814191cb9ec8a64f4df0c04d34b1af3d318ed54f55488a), uint256(0x0153f7f4b7d66cb56d3c11db1a79dc3768c93dc04d82f1ab1c1bf3b1581f221b)], [uint256(0x064e84b6fa5fa8560f6f7c67b3a0f1e5c93440c48428ad6da2fb05e9d6915525), uint256(0x05856021785731ee88fc4284cb7a1ab2f73e84199ccb381994f5b0df99c76409)]);\n        vk.delta = Pairing.G2Point([uint256(0x0b52db6fb05c59edf8ebc5d6273bbb1d1aae0c26544dfa931852501979ed633b), uint256(0x0e382c688477e1e766b3e12e97e9724d5dc79294e48696b28d4c67744ce860c5)], [uint256(0x1c4cb97677eaaa9e8af2c0d81d20027d4c62ce05b46a5fffb24a4faf88f57792), uint256(0x1f2c28a6e0ed5b3316034c433237ab60b78fe0af29f864f2cf6f08d9710622a4)]);\n        vk.gammaABC = new Pairing.G1Point[](3);\n        vk.gammaABC[0] = Pairing.G1Point(uint256(0x27f158db07a594fcd4d2a092847b8576661edc5e4f3cf6c287602a6db457b1f2), uint256(0x2e458b56034dab05b2ceaeae11b9b39479522796851184baa4a91c99e9135372));\n        vk.gammaABC[1] = Pairing.G1Point(uint256(0x062075b49597989dcb27edab996141ecd7da237fc4db2176e4757257f5f06b3d), uint256(0x16fe3df17db03dfcd72d1219665360d4e25589fea780deaca73be3ccfcd95e4c));\n        vk.gammaABC[2] = Pairing.G1Point(uint256(0x169f2a63c6edb7ab27e4f580cf4a09ff21245174329c3d49bda6bd6b8f360a2a), uint256(0x0216feabe7b06b926a1fd2607b78e0f2006eb386ab6dcfa55674a4b9ba51cfe1));\n    }\n    function verify(uint[] memory input, Proof memory proof) internal returns (uint) {\n        VerifyingKey memory vk = verifyingKey();\n        require(input.length + 1 == vk.gammaABC.length);\n        // Compute the linear combination vk_x\n        Pairing.G1Point memory vk_x = Pairing.G1Point(0, 0);\n        for (uint i = 0; i < input.length; i++)\n            vk_x = Pairing.addition(vk_x, Pairing.scalar_mul(vk.gammaABC[i + 1], input[i]));\n        vk_x = Pairing.addition(vk_x, vk.gammaABC[0]);\n        if(!Pairing.pairingProd4(\n             proof.A, proof.B,\n             Pairing.negate(vk_x), vk.gamma,\n             Pairing.negate(proof.C), vk.delta,\n             Pairing.negate(vk.a), vk.b)) return 1;\n        return 0;\n    }\n    event Verified(string s);\n    function verifyTx(\n            uint[2] memory a,\n            uint[2][2] memory b,\n            uint[2] memory c,\n            uint[2] memory input\n        ) public returns (bool r) {\n        Proof memory proof;\n        proof.A = Pairing.G1Point(a[0], a[1]);\n        proof.B = Pairing.G2Point([b[0][0], b[0][1]], [b[1][0], b[1][1]]);\n        proof.C = Pairing.G1Point(c[0], c[1]);\n        uint[] memory inputValues = new uint[](input.length);\n        for(uint i = 0; i < input.length; i++){\n            inputValues[i] = input[i];\n        }\n        if (verify(inputValues, proof) == 0) {\n            emit Verified(\"Transaction successfully verified.\");\n            return true;\n        } else {\n            return false;\n        }\n    }\n}\n",
+  "source": "// This file is LGPL3 Licensed\n\n/**\n * @title Elliptic curve operations on twist points for alt_bn128\n * @author Mustafa Al-Bassam (mus@musalbas.com)\n */\nlibrary BN256G2 {\n    uint256 internal constant FIELD_MODULUS = 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47;\n    uint256 internal constant TWISTBX = 0x2b149d40ceb8aaae81be18991be06ac3b5b4c5e559dbefa33267e6dc24a138e5;\n    uint256 internal constant TWISTBY = 0x9713b03af0fed4cd2cafadeed8fdf4a74fa084e52d1852e4a2bd0685c315d2;\n    uint internal constant PTXX = 0;\n    uint internal constant PTXY = 1;\n    uint internal constant PTYX = 2;\n    uint internal constant PTYY = 3;\n    uint internal constant PTZX = 4;\n    uint internal constant PTZY = 5;\n\n    /**\n     * @notice Add two twist points\n     * @param pt1xx Coefficient 1 of x on point 1\n     * @param pt1xy Coefficient 2 of x on point 1\n     * @param pt1yx Coefficient 1 of y on point 1\n     * @param pt1yy Coefficient 2 of y on point 1\n     * @param pt2xx Coefficient 1 of x on point 2\n     * @param pt2xy Coefficient 2 of x on point 2\n     * @param pt2yx Coefficient 1 of y on point 2\n     * @param pt2yy Coefficient 2 of y on point 2\n     * @return (pt3xx, pt3xy, pt3yx, pt3yy)\n     */\n    function ECTwistAdd(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy\n    ) public pure returns (\n        uint256, uint256,\n        uint256, uint256\n    ) {\n        if (\n            pt1xx == 0 && pt1xy == 0 &&\n            pt1yx == 0 && pt1yy == 0\n        ) {\n            if (!(\n                pt2xx == 0 && pt2xy == 0 &&\n                pt2yx == 0 && pt2yy == 0\n            )) {\n                assert(_isOnCurve(\n                    pt2xx, pt2xy,\n                    pt2yx, pt2yy\n                ));\n            }\n            return (\n                pt2xx, pt2xy,\n                pt2yx, pt2yy\n            );\n        } else if (\n            pt2xx == 0 && pt2xy == 0 &&\n            pt2yx == 0 && pt2yy == 0\n        ) {\n            assert(_isOnCurve(\n                pt1xx, pt1xy,\n                pt1yx, pt1yy\n            ));\n            return (\n                pt1xx, pt1xy,\n                pt1yx, pt1yy\n            );\n        }\n\n        assert(_isOnCurve(\n            pt1xx, pt1xy,\n            pt1yx, pt1yy\n        ));\n        assert(_isOnCurve(\n            pt2xx, pt2xy,\n            pt2yx, pt2yy\n        ));\n\n        uint256[6] memory pt3 = _ECTwistAddJacobian(\n            pt1xx, pt1xy,\n            pt1yx, pt1yy,\n            1,     0,\n            pt2xx, pt2xy,\n            pt2yx, pt2yy,\n            1,     0\n        );\n\n        return _fromJacobian(\n            pt3[PTXX], pt3[PTXY],\n            pt3[PTYX], pt3[PTYY],\n            pt3[PTZX], pt3[PTZY]\n        );\n    }\n\n    /**\n     * @notice Multiply a twist point by a scalar\n     * @param s     Scalar to multiply by\n     * @param pt1xx Coefficient 1 of x\n     * @param pt1xy Coefficient 2 of x\n     * @param pt1yx Coefficient 1 of y\n     * @param pt1yy Coefficient 2 of y\n     * @return (pt2xx, pt2xy, pt2yx, pt2yy)\n     */\n    function ECTwistMul(\n        uint256 s,\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy\n    ) public pure returns (\n        uint256, uint256,\n        uint256, uint256\n    ) {\n        uint256 pt1zx = 1;\n        if (\n            pt1xx == 0 && pt1xy == 0 &&\n            pt1yx == 0 && pt1yy == 0\n        ) {\n            pt1xx = 1;\n            pt1yx = 1;\n            pt1zx = 0;\n        } else {\n            assert(_isOnCurve(\n                pt1xx, pt1xy,\n                pt1yx, pt1yy\n            ));\n        }\n\n        uint256[6] memory pt2 = _ECTwistMulJacobian(\n            s,\n            pt1xx, pt1xy,\n            pt1yx, pt1yy,\n            pt1zx, 0\n        );\n\n        return _fromJacobian(\n            pt2[PTXX], pt2[PTXY],\n            pt2[PTYX], pt2[PTYY],\n            pt2[PTZX], pt2[PTZY]\n        );\n    }\n\n    /**\n     * @notice Get the field modulus\n     * @return The field modulus\n     */\n    function GetFieldModulus() public pure returns (uint256) {\n        return FIELD_MODULUS;\n    }\n\n    function submod(uint256 a, uint256 b, uint256 n) internal pure returns (uint256) {\n        return addmod(a, n - b, n);\n    }\n\n    function _FQ2Mul(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256, uint256) {\n        return (\n            submod(mulmod(xx, yx, FIELD_MODULUS), mulmod(xy, yy, FIELD_MODULUS), FIELD_MODULUS),\n            addmod(mulmod(xx, yy, FIELD_MODULUS), mulmod(xy, yx, FIELD_MODULUS), FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Muc(\n        uint256 xx, uint256 xy,\n        uint256 c\n    ) internal pure returns(uint256, uint256) {\n        return (\n            mulmod(xx, c, FIELD_MODULUS),\n            mulmod(xy, c, FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Add(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256, uint256) {\n        return (\n            addmod(xx, yx, FIELD_MODULUS),\n            addmod(xy, yy, FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Sub(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256 rx, uint256 ry) {\n        return (\n            submod(xx, yx, FIELD_MODULUS),\n            submod(xy, yy, FIELD_MODULUS)\n        );\n    }\n\n    function _FQ2Div(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns(uint256, uint256) {\n        (yx, yy) = _FQ2Inv(yx, yy);\n        return _FQ2Mul(xx, xy, yx, yy);\n    }\n\n    function _FQ2Inv(uint256 x, uint256 y) internal pure returns(uint256, uint256) {\n        uint256 inv = _modInv(addmod(mulmod(y, y, FIELD_MODULUS), mulmod(x, x, FIELD_MODULUS), FIELD_MODULUS), FIELD_MODULUS);\n        return (\n            mulmod(x, inv, FIELD_MODULUS),\n            FIELD_MODULUS - mulmod(y, inv, FIELD_MODULUS)\n        );\n    }\n\n    function _isOnCurve(\n        uint256 xx, uint256 xy,\n        uint256 yx, uint256 yy\n    ) internal pure returns (bool) {\n        uint256 yyx;\n        uint256 yyy;\n        uint256 xxxx;\n        uint256 xxxy;\n        (yyx, yyy) = _FQ2Mul(yx, yy, yx, yy);\n        (xxxx, xxxy) = _FQ2Mul(xx, xy, xx, xy);\n        (xxxx, xxxy) = _FQ2Mul(xxxx, xxxy, xx, xy);\n        (yyx, yyy) = _FQ2Sub(yyx, yyy, xxxx, xxxy);\n        (yyx, yyy) = _FQ2Sub(yyx, yyy, TWISTBX, TWISTBY);\n        return yyx == 0 && yyy == 0;\n    }\n\n    function _modInv(uint256 a, uint256 n) internal pure returns(uint256 t) {\n        t = 0;\n        uint256 newT = 1;\n        uint256 r = n;\n        uint256 newR = a;\n        uint256 q;\n        while (newR != 0) {\n            q = r / newR;\n            (t, newT) = (newT, submod(t, mulmod(q, newT, n), n));\n            (r, newR) = (newR, r - q * newR);\n        }\n    }\n\n    function _fromJacobian(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy\n    ) internal pure returns (\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy\n    ) {\n        uint256 invzx;\n        uint256 invzy;\n        (invzx, invzy) = _FQ2Inv(pt1zx, pt1zy);\n        (pt2xx, pt2xy) = _FQ2Mul(pt1xx, pt1xy, invzx, invzy);\n        (pt2yx, pt2yy) = _FQ2Mul(pt1yx, pt1yy, invzx, invzy);\n    }\n\n    function _ECTwistAddJacobian(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy,\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy,\n        uint256 pt2zx, uint256 pt2zy) internal pure returns (uint256[6] memory pt3) {\n            if (pt1zx == 0 && pt1zy == 0) {\n                (\n                    pt3[PTXX], pt3[PTXY],\n                    pt3[PTYX], pt3[PTYY],\n                    pt3[PTZX], pt3[PTZY]\n                ) = (\n                    pt2xx, pt2xy,\n                    pt2yx, pt2yy,\n                    pt2zx, pt2zy\n                );\n                return pt3;\n            } else if (pt2zx == 0 && pt2zy == 0) {\n                (\n                    pt3[PTXX], pt3[PTXY],\n                    pt3[PTYX], pt3[PTYY],\n                    pt3[PTZX], pt3[PTZY]\n                ) = (\n                    pt1xx, pt1xy,\n                    pt1yx, pt1yy,\n                    pt1zx, pt1zy\n                );\n                return pt3;\n            }\n\n            (pt2yx,     pt2yy)     = _FQ2Mul(pt2yx, pt2yy, pt1zx, pt1zy); // U1 = y2 * z1\n            (pt3[PTYX], pt3[PTYY]) = _FQ2Mul(pt1yx, pt1yy, pt2zx, pt2zy); // U2 = y1 * z2\n            (pt2xx,     pt2xy)     = _FQ2Mul(pt2xx, pt2xy, pt1zx, pt1zy); // V1 = x2 * z1\n            (pt3[PTZX], pt3[PTZY]) = _FQ2Mul(pt1xx, pt1xy, pt2zx, pt2zy); // V2 = x1 * z2\n\n            if (pt2xx == pt3[PTZX] && pt2xy == pt3[PTZY]) {\n                if (pt2yx == pt3[PTYX] && pt2yy == pt3[PTYY]) {\n                    (\n                        pt3[PTXX], pt3[PTXY],\n                        pt3[PTYX], pt3[PTYY],\n                        pt3[PTZX], pt3[PTZY]\n                    ) = _ECTwistDoubleJacobian(pt1xx, pt1xy, pt1yx, pt1yy, pt1zx, pt1zy);\n                    return pt3;\n                }\n                (\n                    pt3[PTXX], pt3[PTXY],\n                    pt3[PTYX], pt3[PTYY],\n                    pt3[PTZX], pt3[PTZY]\n                ) = (\n                    1, 0,\n                    1, 0,\n                    0, 0\n                );\n                return pt3;\n            }\n\n            (pt2zx,     pt2zy)     = _FQ2Mul(pt1zx, pt1zy, pt2zx,     pt2zy);     // W = z1 * z2\n            (pt1xx,     pt1xy)     = _FQ2Sub(pt2yx, pt2yy, pt3[PTYX], pt3[PTYY]); // U = U1 - U2\n            (pt1yx,     pt1yy)     = _FQ2Sub(pt2xx, pt2xy, pt3[PTZX], pt3[PTZY]); // V = V1 - V2\n            (pt1zx,     pt1zy)     = _FQ2Mul(pt1yx, pt1yy, pt1yx,     pt1yy);     // V_squared = V * V\n            (pt2yx,     pt2yy)     = _FQ2Mul(pt1zx, pt1zy, pt3[PTZX], pt3[PTZY]); // V_squared_times_V2 = V_squared * V2\n            (pt1zx,     pt1zy)     = _FQ2Mul(pt1zx, pt1zy, pt1yx,     pt1yy);     // V_cubed = V * V_squared\n            (pt3[PTZX], pt3[PTZY]) = _FQ2Mul(pt1zx, pt1zy, pt2zx,     pt2zy);     // newz = V_cubed * W\n            (pt2xx,     pt2xy)     = _FQ2Mul(pt1xx, pt1xy, pt1xx,     pt1xy);     // U * U\n            (pt2xx,     pt2xy)     = _FQ2Mul(pt2xx, pt2xy, pt2zx,     pt2zy);     // U * U * W\n            (pt2xx,     pt2xy)     = _FQ2Sub(pt2xx, pt2xy, pt1zx,     pt1zy);     // U * U * W - V_cubed\n            (pt2zx,     pt2zy)     = _FQ2Muc(pt2yx, pt2yy, 2);                    // 2 * V_squared_times_V2\n            (pt2xx,     pt2xy)     = _FQ2Sub(pt2xx, pt2xy, pt2zx,     pt2zy);     // A = U * U * W - V_cubed - 2 * V_squared_times_V2\n            (pt3[PTXX], pt3[PTXY]) = _FQ2Mul(pt1yx, pt1yy, pt2xx,     pt2xy);     // newx = V * A\n            (pt1yx,     pt1yy)     = _FQ2Sub(pt2yx, pt2yy, pt2xx,     pt2xy);     // V_squared_times_V2 - A\n            (pt1yx,     pt1yy)     = _FQ2Mul(pt1xx, pt1xy, pt1yx,     pt1yy);     // U * (V_squared_times_V2 - A)\n            (pt1xx,     pt1xy)     = _FQ2Mul(pt1zx, pt1zy, pt3[PTYX], pt3[PTYY]); // V_cubed * U2\n            (pt3[PTYX], pt3[PTYY]) = _FQ2Sub(pt1yx, pt1yy, pt1xx,     pt1xy);     // newy = U * (V_squared_times_V2 - A) - V_cubed * U2\n    }\n\n    function _ECTwistDoubleJacobian(\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy\n    ) internal pure returns(\n        uint256 pt2xx, uint256 pt2xy,\n        uint256 pt2yx, uint256 pt2yy,\n        uint256 pt2zx, uint256 pt2zy\n    ) {\n        (pt2xx, pt2xy) = _FQ2Muc(pt1xx, pt1xy, 3);            // 3 * x\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt1xx, pt1xy); // W = 3 * x * x\n        (pt1zx, pt1zy) = _FQ2Mul(pt1yx, pt1yy, pt1zx, pt1zy); // S = y * z\n        (pt2yx, pt2yy) = _FQ2Mul(pt1xx, pt1xy, pt1yx, pt1yy); // x * y\n        (pt2yx, pt2yy) = _FQ2Mul(pt2yx, pt2yy, pt1zx, pt1zy); // B = x * y * S\n        (pt1xx, pt1xy) = _FQ2Mul(pt2xx, pt2xy, pt2xx, pt2xy); // W * W\n        (pt2zx, pt2zy) = _FQ2Muc(pt2yx, pt2yy, 8);            // 8 * B\n        (pt1xx, pt1xy) = _FQ2Sub(pt1xx, pt1xy, pt2zx, pt2zy); // H = W * W - 8 * B\n        (pt2zx, pt2zy) = _FQ2Mul(pt1zx, pt1zy, pt1zx, pt1zy); // S_squared = S * S\n        (pt2yx, pt2yy) = _FQ2Muc(pt2yx, pt2yy, 4);            // 4 * B\n        (pt2yx, pt2yy) = _FQ2Sub(pt2yx, pt2yy, pt1xx, pt1xy); // 4 * B - H\n        (pt2yx, pt2yy) = _FQ2Mul(pt2yx, pt2yy, pt2xx, pt2xy); // W * (4 * B - H)\n        (pt2xx, pt2xy) = _FQ2Muc(pt1yx, pt1yy, 8);            // 8 * y\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt1yx, pt1yy); // 8 * y * y\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt2zx, pt2zy); // 8 * y * y * S_squared\n        (pt2yx, pt2yy) = _FQ2Sub(pt2yx, pt2yy, pt2xx, pt2xy); // newy = W * (4 * B - H) - 8 * y * y * S_squared\n        (pt2xx, pt2xy) = _FQ2Muc(pt1xx, pt1xy, 2);            // 2 * H\n        (pt2xx, pt2xy) = _FQ2Mul(pt2xx, pt2xy, pt1zx, pt1zy); // newx = 2 * H * S\n        (pt2zx, pt2zy) = _FQ2Mul(pt1zx, pt1zy, pt2zx, pt2zy); // S * S_squared\n        (pt2zx, pt2zy) = _FQ2Muc(pt2zx, pt2zy, 8);            // newz = 8 * S * S_squared\n    }\n\n    function _ECTwistMulJacobian(\n        uint256 d,\n        uint256 pt1xx, uint256 pt1xy,\n        uint256 pt1yx, uint256 pt1yy,\n        uint256 pt1zx, uint256 pt1zy\n    ) internal pure returns(uint256[6] memory pt2) {\n        while (d != 0) {\n            if ((d & 1) != 0) {\n                pt2 = _ECTwistAddJacobian(\n                    pt2[PTXX], pt2[PTXY],\n                    pt2[PTYX], pt2[PTYY],\n                    pt2[PTZX], pt2[PTZY],\n                    pt1xx, pt1xy,\n                    pt1yx, pt1yy,\n                    pt1zx, pt1zy);\n            }\n            (\n                pt1xx, pt1xy,\n                pt1yx, pt1yy,\n                pt1zx, pt1zy\n            ) = _ECTwistDoubleJacobian(\n                pt1xx, pt1xy,\n                pt1yx, pt1yy,\n                pt1zx, pt1zy\n            );\n\n            d = d / 2;\n        }\n    }\n}\n\n\n// This file is MIT Licensed.\n//\n// Copyright 2017 Christian Reitwiessner\n// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\npragma solidity ^0.5.0;\nlibrary Pairing {\n    struct G1Point {\n        uint X;\n        uint Y;\n    }\n    // Encoding of field elements is: X[0] * z + X[1]\n    struct G2Point {\n        uint[2] X;\n        uint[2] Y;\n    }\n    /// @return the generator of G1\n    function P1() pure internal returns (G1Point memory) {\n        return G1Point(1, 2);\n    }\n    /// @return the generator of G2\n    function P2() pure internal returns (G2Point memory) {\n        return G2Point(\n            [11559732032986387107991004021392285783925812861821192530917403151452391805634,\n             10857046999023057135944570762232829481370756359578518086990519993285655852781],\n            [4082367875863433681332203403145435568316851327593401208105741076214120093531,\n             8495653923123431417604973247489272438418190587263600148770280649306958101930]\n        );\n    }\n    /// @return the negation of p, i.e. p.addition(p.negate()) should be zero.\n    function negate(G1Point memory p) pure internal returns (G1Point memory) {\n        // The prime q in the base field F_q for G1\n        uint q = 21888242871839275222246405745257275088696311157297823662689037894645226208583;\n        if (p.X == 0 && p.Y == 0)\n            return G1Point(0, 0);\n        return G1Point(p.X, q - (p.Y % q));\n    }\n    /// @return the sum of two points of G1\n    function addition(G1Point memory p1, G1Point memory p2) internal returns (G1Point memory r) {\n        uint[4] memory input;\n        input[0] = p1.X;\n        input[1] = p1.Y;\n        input[2] = p2.X;\n        input[3] = p2.Y;\n        bool success;\n        assembly {\n            success := call(sub(gas, 2000), 6, 0, input, 0xc0, r, 0x60)\n            // Use \"invalid\" to make gas estimation work\n            switch success case 0 { invalid() }\n        }\n        require(success);\n    }\n    /// @return the sum of two points of G2\n    function addition(G2Point memory p1, G2Point memory p2) internal pure returns (G2Point memory r) {\n        (r.X[1], r.X[0], r.Y[1], r.Y[0]) = BN256G2.ECTwistAdd(p1.X[1],p1.X[0],p1.Y[1],p1.Y[0],p2.X[1],p2.X[0],p2.Y[1],p2.Y[0]);\n    }\n    /// @return the product of a point on G1 and a scalar, i.e.\n    /// p == p.scalar_mul(1) and p.addition(p) == p.scalar_mul(2) for all points p.\n    function scalar_mul(G1Point memory p, uint s) internal returns (G1Point memory r) {\n        uint[3] memory input;\n        input[0] = p.X;\n        input[1] = p.Y;\n        input[2] = s;\n        bool success;\n        assembly {\n            success := call(sub(gas, 2000), 7, 0, input, 0x80, r, 0x60)\n            // Use \"invalid\" to make gas estimation work\n            switch success case 0 { invalid() }\n        }\n        require (success);\n    }\n    /// @return the result of computing the pairing check\n    /// e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1\n    /// For example pairing([P1(), P1().negate()], [P2(), P2()]) should\n    /// return true.\n    function pairing(G1Point[] memory p1, G2Point[] memory p2) internal returns (bool) {\n        require(p1.length == p2.length);\n        uint elements = p1.length;\n        uint inputSize = elements * 6;\n        uint[] memory input = new uint[](inputSize);\n        for (uint i = 0; i < elements; i++)\n        {\n            input[i * 6 + 0] = p1[i].X;\n            input[i * 6 + 1] = p1[i].Y;\n            input[i * 6 + 2] = p2[i].X[0];\n            input[i * 6 + 3] = p2[i].X[1];\n            input[i * 6 + 4] = p2[i].Y[0];\n            input[i * 6 + 5] = p2[i].Y[1];\n        }\n        uint[1] memory out;\n        bool success;\n        assembly {\n            success := call(sub(gas, 2000), 8, 0, add(input, 0x20), mul(inputSize, 0x20), out, 0x20)\n            // Use \"invalid\" to make gas estimation work\n            switch success case 0 { invalid() }\n        }\n        require(success);\n        return out[0] != 0;\n    }\n    /// Convenience method for a pairing check for two pairs.\n    function pairingProd2(G1Point memory a1, G2Point memory a2, G1Point memory b1, G2Point memory b2) internal returns (bool) {\n        G1Point[] memory p1 = new G1Point[](2);\n        G2Point[] memory p2 = new G2Point[](2);\n        p1[0] = a1;\n        p1[1] = b1;\n        p2[0] = a2;\n        p2[1] = b2;\n        return pairing(p1, p2);\n    }\n    /// Convenience method for a pairing check for three pairs.\n    function pairingProd3(\n            G1Point memory a1, G2Point memory a2,\n            G1Point memory b1, G2Point memory b2,\n            G1Point memory c1, G2Point memory c2\n    ) internal returns (bool) {\n        G1Point[] memory p1 = new G1Point[](3);\n        G2Point[] memory p2 = new G2Point[](3);\n        p1[0] = a1;\n        p1[1] = b1;\n        p1[2] = c1;\n        p2[0] = a2;\n        p2[1] = b2;\n        p2[2] = c2;\n        return pairing(p1, p2);\n    }\n    /// Convenience method for a pairing check for four pairs.\n    function pairingProd4(\n            G1Point memory a1, G2Point memory a2,\n            G1Point memory b1, G2Point memory b2,\n            G1Point memory c1, G2Point memory c2,\n            G1Point memory d1, G2Point memory d2\n    ) internal returns (bool) {\n        G1Point[] memory p1 = new G1Point[](4);\n        G2Point[] memory p2 = new G2Point[](4);\n        p1[0] = a1;\n        p1[1] = b1;\n        p1[2] = c1;\n        p1[3] = d1;\n        p2[0] = a2;\n        p2[1] = b2;\n        p2[2] = c2;\n        p2[3] = d2;\n        return pairing(p1, p2);\n    }\n}\n\ncontract Verifier {\n    using Pairing for *;\n    struct VerifyingKey {\n        Pairing.G1Point a;\n        Pairing.G2Point b;\n        Pairing.G2Point gamma;\n        Pairing.G2Point delta;\n        Pairing.G1Point[] gammaABC;\n    }\n    struct Proof {\n        Pairing.G1Point A;\n        Pairing.G2Point B;\n        Pairing.G1Point C;\n    }\n    function verifyingKey() pure internal returns (VerifyingKey memory vk) {\n        vk.a = Pairing.G1Point(uint256(0x1ab43f39fe5088899b38bdad7fc3771916dcf2e6ddd06fca67974fa6e285de50), uint256(0x0698cc7d1e8127a66a7a591dbf24cb0be0ff8ae7597dc8eaade725039171caf9));\n        vk.b = Pairing.G2Point([uint256(0x20908a55b2b980d8b897462e168caa86f34da30cbbe721e0b5db92aff872e771), uint256(0x26805a3d161cb78f3182927c13c2ed98d778f85f7afa939779809b72559eed4a)], [uint256(0x258e496a6e3fdac64aa479eb9277d028893bbdfa2c2be6548d9f3977ae8ce782), uint256(0x1f34f2a17214ea0ed9003e8ca55566d94cda55f45b0e7cb305ac965705250d46)]);\n        vk.gamma = Pairing.G2Point([uint256(0x2a65637d7b238cd1afa5db7f013050fcd92e54ca0edc37633ab2a67bdda6a372), uint256(0x0b02dc57d8f63e85df0db35fb5705a8f39f102a72663d444ea438354c147e7e4)], [uint256(0x28aa608d1d118446562db75918c70f17a516a50c4f928f0fe730ef8761c6977a), uint256(0x0bb4196112f2808a8b060e25c1cf626937c07e2052d3919645661736284d0b8d)]);\n        vk.delta = Pairing.G2Point([uint256(0x2cf80857147af64832fc3bc9141c10c1532ff42c85091e1b55d72e84f78df0d6), uint256(0x2221bfde5131ac1cd021b6224feb98238b5b01cf576385891515b955a61de46e)], [uint256(0x12757b5b338c6a8023831f9ebbd8bfa66164d48237c0f61eac0dc6d484078194), uint256(0x16d977de52697b4abd6063289411bff350dd31e19b0bb4f19c30e3b66dbe2bac)]);\n        vk.gammaABC = new Pairing.G1Point[](3);\n        vk.gammaABC[0] = Pairing.G1Point(uint256(0x1ffff9aff003cafeaeede41f381855535a738a41ea7c34e09c25485f0d0c4715), uint256(0x0d9c9d5eacb51ff1c77037e7b9760b67d23fb528a7dc9b2f6fc5f2ce7cc31726));\n        vk.gammaABC[1] = Pairing.G1Point(uint256(0x2a73955452a68e007ab38949c3e6a05ccf6906d6f360e96ef211c75f8e952905), uint256(0x2b3c9364723c05f2df18834baac1e6a170d3708ca346944ac91f1e7ceb4f3a38));\n        vk.gammaABC[2] = Pairing.G1Point(uint256(0x1ca52df4e671e7f7da0bae4515cbc307d5584eaa8674f0832a5dd9dffd0ae9e6), uint256(0x2b23f1a1f70443c5bc093cfc508cda858d254f27ef288f6a38024c78b90edda5));\n    }\n    function verify(uint[] memory input, Proof memory proof) internal returns (uint) {\n        VerifyingKey memory vk = verifyingKey();\n        require(input.length + 1 == vk.gammaABC.length);\n        // Compute the linear combination vk_x\n        Pairing.G1Point memory vk_x = Pairing.G1Point(0, 0);\n        for (uint i = 0; i < input.length; i++)\n            vk_x = Pairing.addition(vk_x, Pairing.scalar_mul(vk.gammaABC[i + 1], input[i]));\n        vk_x = Pairing.addition(vk_x, vk.gammaABC[0]);\n        if(!Pairing.pairingProd4(\n             proof.A, proof.B,\n             Pairing.negate(vk_x), vk.gamma,\n             Pairing.negate(proof.C), vk.delta,\n             Pairing.negate(vk.a), vk.b)) return 1;\n        return 0;\n    }\n    event Verified(string s);\n    function verifyTx(\n            uint[2] memory a,\n            uint[2][2] memory b,\n            uint[2] memory c,\n            uint[2] memory input\n        ) public returns (bool r) {\n        Proof memory proof;\n        proof.A = Pairing.G1Point(a[0], a[1]);\n        proof.B = Pairing.G2Point([b[0][0], b[0][1]], [b[1][0], b[1][1]]);\n        proof.C = Pairing.G1Point(c[0], c[1]);\n        uint[] memory inputValues = new uint[](input.length);\n        for(uint i = 0; i < input.length; i++){\n            inputValues[i] = input[i];\n        }\n        if (verify(inputValues, proof) == 0) {\n            emit Verified(\"Transaction successfully verified.\");\n            return true;\n        } else {\n            return false;\n        }\n    }\n}\n",
   "sourcePath": "/c/Users/rickw/Development/Blockchain-Projects/Blockchain-Capstone/eth-contracts/contracts/Verifier.sol",
   "ast": {
     "absolutePath": "/c/Users/rickw/Development/Blockchain-Projects/Blockchain-Capstone/eth-contracts/contracts/Verifier.sol",
@@ -30874,7 +30874,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307832393161356637393866396539396532376338336665336464363334666462633939633632363564386231376634386234666338333830303439656163366662",
+                              "hexValue": "307831616234336633396665353038383839396233386264616437666333373731393136646366326536646464303666636136373937346661366532383564653530",
                               "id": 9807,
                               "isConstant": false,
                               "isLValue": false,
@@ -30885,17 +30885,17 @@
                               "src": "20907:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_18591423758779554166479420502077874668014157396054049380330793952958244112123_by_1",
-                                "typeString": "int_const 1859...(69 digits omitted)...2123"
+                                "typeIdentifier": "t_rational_12078602908344294692439428556089630859064049382573092770935127084475640831568_by_1",
+                                "typeString": "int_const 1207...(69 digits omitted)...1568"
                               },
-                              "value": "0x291a5f798f9e99e27c83fe3dd634fdbc99c6265d8b17f48b4fc8380049eac6fb"
+                              "value": "0x1ab43f39fe5088899b38bdad7fc3771916dcf2e6ddd06fca67974fa6e285de50"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_18591423758779554166479420502077874668014157396054049380330793952958244112123_by_1",
-                                "typeString": "int_const 1859...(69 digits omitted)...2123"
+                                "typeIdentifier": "t_rational_12078602908344294692439428556089630859064049382573092770935127084475640831568_by_1",
+                                "typeString": "int_const 1207...(69 digits omitted)...1568"
                               }
                             ],
                             "id": 9806,
@@ -30930,7 +30930,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307831613334626631636230353638396536313964633930353631313934366631366138363232383538363263363035363532303634336363653864333465343630",
+                              "hexValue": "307830363938636337643165383132376136366137613539316462663234636230626530666638616537353937646338656161646537323530333931373163616639",
                               "id": 9810,
                               "isConstant": false,
                               "isLValue": false,
@@ -30941,17 +30941,17 @@
                               "src": "20984:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_11853329117534709037274131365992968315946788182023844848890876675736571536480_by_1",
-                                "typeString": "int_const 1185...(69 digits omitted)...6480"
+                                "typeIdentifier": "t_rational_2983849174806491404402986933569368453372896623835816890807179126779082296057_by_1",
+                                "typeString": "int_const 2983...(68 digits omitted)...6057"
                               },
-                              "value": "0x1a34bf1cb05689e619dc905611946f16a862285862c6056520643cce8d34e460"
+                              "value": "0x0698cc7d1e8127a66a7a591dbf24cb0be0ff8ae7597dc8eaade725039171caf9"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_11853329117534709037274131365992968315946788182023844848890876675736571536480_by_1",
-                                "typeString": "int_const 1185...(69 digits omitted)...6480"
+                                "typeIdentifier": "t_rational_2983849174806491404402986933569368453372896623835816890807179126779082296057_by_1",
+                                "typeString": "int_const 2983...(68 digits omitted)...6057"
                               }
                             ],
                             "id": 9809,
@@ -31094,7 +31094,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307832653339666535616236656532636138333966373936633836316163336439613930633034626365626239333437666337373435363037646561623538323037",
+                                  "hexValue": "307832303930386135356232623938306438623839373436326531363863616138366633346461333063626265373231653062356462393261666638373265373731",
                                   "id": 9821,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31105,17 +31105,17 @@
                                   "src": "21094:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_20908856806754722984805158201077746839868922775286403179729730499583415779847_by_1",
-                                    "typeString": "int_const 2090...(69 digits omitted)...9847"
+                                    "typeIdentifier": "t_rational_14729391883405835128242497571598885654589229607535514558550462285082189293425_by_1",
+                                    "typeString": "int_const 1472...(69 digits omitted)...3425"
                                   },
-                                  "value": "0x2e39fe5ab6ee2ca839f796c861ac3d9a90c04bcebb9347fc7745607deab58207"
+                                  "value": "0x20908a55b2b980d8b897462e168caa86f34da30cbbe721e0b5db92aff872e771"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_20908856806754722984805158201077746839868922775286403179729730499583415779847_by_1",
-                                    "typeString": "int_const 2090...(69 digits omitted)...9847"
+                                    "typeIdentifier": "t_rational_14729391883405835128242497571598885654589229607535514558550462285082189293425_by_1",
+                                    "typeString": "int_const 1472...(69 digits omitted)...3425"
                                   }
                                 ],
                                 "id": 9820,
@@ -31150,7 +31150,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307832376130643232346230666534666239616432313033363032383336316337656232633262343839653236393661363563383363653936386633336533393564",
+                                  "hexValue": "307832363830356133643136316362373866333138323932376331336332656439386437373866383566376166613933393737393830396237323535396565643461",
                                   "id": 9824,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31161,17 +31161,17 @@
                                   "src": "21171:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_17924346981042417661781752395694706535587703820605159195899633742324252424541_by_1",
-                                    "typeString": "int_const 1792...(69 digits omitted)...4541"
+                                    "typeIdentifier": "t_rational_17414667474512397716414013711935394921005113795675289094769365326583331482954_by_1",
+                                    "typeString": "int_const 1741...(69 digits omitted)...2954"
                                   },
-                                  "value": "0x27a0d224b0fe4fb9ad21036028361c7eb2c2b489e2696a65c83ce968f33e395d"
+                                  "value": "0x26805a3d161cb78f3182927c13c2ed98d778f85f7afa939779809b72559eed4a"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_17924346981042417661781752395694706535587703820605159195899633742324252424541_by_1",
-                                    "typeString": "int_const 1792...(69 digits omitted)...4541"
+                                    "typeIdentifier": "t_rational_17414667474512397716414013711935394921005113795675289094769365326583331482954_by_1",
+                                    "typeString": "int_const 1741...(69 digits omitted)...2954"
                                   }
                                 ],
                                 "id": 9823,
@@ -31223,7 +31223,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830623231383363656164303061326561316635656434313431653032383638303236383566366531623531626563653138646630663831303635306137383837",
+                                  "hexValue": "307832353865343936613665336664616336346161343739656239323737643032383839336262646661326332626536353438643966333937376165386365373832",
                                   "id": 9828,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31234,17 +31234,17 @@
                                   "src": "21250:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_5034656988293348204105336117277684374117967420941757403146970037710937028743_by_1",
-                                    "typeString": "int_const 5034...(68 digits omitted)...8743"
+                                    "typeIdentifier": "t_rational_16986974377627669711247243157844622333429297139327323306844626974440254400386_by_1",
+                                    "typeString": "int_const 1698...(69 digits omitted)...0386"
                                   },
-                                  "value": "0x0b2183cead00a2ea1f5ed4141e0286802685f6e1b51bece18df0f810650a7887"
+                                  "value": "0x258e496a6e3fdac64aa479eb9277d028893bbdfa2c2be6548d9f3977ae8ce782"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_5034656988293348204105336117277684374117967420941757403146970037710937028743_by_1",
-                                    "typeString": "int_const 5034...(68 digits omitted)...8743"
+                                    "typeIdentifier": "t_rational_16986974377627669711247243157844622333429297139327323306844626974440254400386_by_1",
+                                    "typeString": "int_const 1698...(69 digits omitted)...0386"
                                   }
                                 ],
                                 "id": 9827,
@@ -31279,7 +31279,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307831663632633238663935316164336366666561633466626130323435316538633035363030663932326435376164646466303366643563306634303961663762",
+                                  "hexValue": "307831663334663261313732313465613065643930303365386361353535363664393463646135356634356230653763623330356163393635373035323530643436",
                                   "id": 9831,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31290,17 +31290,17 @@
                                   "src": "21327:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_14196192128195758083558037664648555378766214872011820652589197177113088208763_by_1",
-                                    "typeString": "int_const 1419...(69 digits omitted)...8763"
+                                    "typeIdentifier": "t_rational_14115248928631275642105700721548441727993958219310437630073281368757453000006_by_1",
+                                    "typeString": "int_const 1411...(69 digits omitted)...0006"
                                   },
-                                  "value": "0x1f62c28f951ad3cffeac4fba02451e8c05600f922d57adddf03fd5c0f409af7b"
+                                  "value": "0x1f34f2a17214ea0ed9003e8ca55566d94cda55f45b0e7cb305ac965705250d46"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_14196192128195758083558037664648555378766214872011820652589197177113088208763_by_1",
-                                    "typeString": "int_const 1419...(69 digits omitted)...8763"
+                                    "typeIdentifier": "t_rational_14115248928631275642105700721548441727993958219310437630073281368757453000006_by_1",
+                                    "typeString": "int_const 1411...(69 digits omitted)...0006"
                                   }
                                 ],
                                 "id": 9830,
@@ -31457,7 +31457,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830393862626138353064363338653336393638313431393163623965633861363466346466306330346433346231616633643331386564353466353534383861",
+                                  "hexValue": "307832613635363337643762323338636431616661356462376630313330353066636439326535346361306564633337363333616232613637626464613661333732",
                                   "id": 9843,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31468,17 +31468,17 @@
                                   "src": "21442:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_4317694691157017250412642689578311298871439314780657905205676451588220471434_by_1",
-                                    "typeString": "int_const 4317...(68 digits omitted)...1434"
+                                    "typeIdentifier": "t_rational_19176277849889507116268885118872732881645203070327673701013685212612714210162_by_1",
+                                    "typeString": "int_const 1917...(69 digits omitted)...0162"
                                   },
-                                  "value": "0x098bba850d638e3696814191cb9ec8a64f4df0c04d34b1af3d318ed54f55488a"
+                                  "value": "0x2a65637d7b238cd1afa5db7f013050fcd92e54ca0edc37633ab2a67bdda6a372"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_4317694691157017250412642689578311298871439314780657905205676451588220471434_by_1",
-                                    "typeString": "int_const 4317...(68 digits omitted)...1434"
+                                    "typeIdentifier": "t_rational_19176277849889507116268885118872732881645203070327673701013685212612714210162_by_1",
+                                    "typeString": "int_const 1917...(69 digits omitted)...0162"
                                   }
                                 ],
                                 "id": 9842,
@@ -31513,7 +31513,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830313533663766346237643636636235366433633131646231613739646333373638633933646330346438326631616231633162663362313538316632323162",
+                                  "hexValue": "307830623032646335376438663633653835646630646233356662353730356138663339663130326137323636336434343465613433383335346331343765376534",
                                   "id": 9846,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31524,17 +31524,17 @@
                                   "src": "21519:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_600672483894874899045613663338272564025724587317639508005662770217783075355_by_1",
-                                    "typeString": "int_const 6006...(67 digits omitted)...5355"
+                                    "typeIdentifier": "t_rational_4980495781105895008070767855747970150994645797180301418459200390724846086116_by_1",
+                                    "typeString": "int_const 4980...(68 digits omitted)...6116"
                                   },
-                                  "value": "0x0153f7f4b7d66cb56d3c11db1a79dc3768c93dc04d82f1ab1c1bf3b1581f221b"
+                                  "value": "0x0b02dc57d8f63e85df0db35fb5705a8f39f102a72663d444ea438354c147e7e4"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_600672483894874899045613663338272564025724587317639508005662770217783075355_by_1",
-                                    "typeString": "int_const 6006...(67 digits omitted)...5355"
+                                    "typeIdentifier": "t_rational_4980495781105895008070767855747970150994645797180301418459200390724846086116_by_1",
+                                    "typeString": "int_const 4980...(68 digits omitted)...6116"
                                   }
                                 ],
                                 "id": 9845,
@@ -31586,7 +31586,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830363465383462366661356661383536306636663763363762336130663165356339333434306334383432386164366461326662303565396436393135353235",
+                                  "hexValue": "307832386161363038643164313138343436353632646237353931386337306631376135313661353063346639323866306665373330656638373631633639373761",
                                   "id": 9850,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31597,17 +31597,17 @@
                                   "src": "21598:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_2852607126147806239960163418061874114679164268951282747000660201142846838053_by_1",
-                                    "typeString": "int_const 2852...(68 digits omitted)...8053"
+                                    "typeIdentifier": "t_rational_18393544316406015243414761577632448766959221032976273979285851892110756059002_by_1",
+                                    "typeString": "int_const 1839...(69 digits omitted)...9002"
                                   },
-                                  "value": "0x064e84b6fa5fa8560f6f7c67b3a0f1e5c93440c48428ad6da2fb05e9d6915525"
+                                  "value": "0x28aa608d1d118446562db75918c70f17a516a50c4f928f0fe730ef8761c6977a"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_2852607126147806239960163418061874114679164268951282747000660201142846838053_by_1",
-                                    "typeString": "int_const 2852...(68 digits omitted)...8053"
+                                    "typeIdentifier": "t_rational_18393544316406015243414761577632448766959221032976273979285851892110756059002_by_1",
+                                    "typeString": "int_const 1839...(69 digits omitted)...9002"
                                   }
                                 ],
                                 "id": 9849,
@@ -31642,7 +31642,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830353835363032313738353733316565383866633432383463623761316162326637336538343139396363623338313939346635623064663939633736343039",
+                                  "hexValue": "307830626234313936313132663238303861386230363065323563316366363236393337633037653230353264333931393634353636313733363238346430623864",
                                   "id": 9853,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31653,17 +31653,17 @@
                                   "src": "21675:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_2497218372532733929417758666148918098908561857824737445007932963106255758345_by_1",
-                                    "typeString": "int_const 2497...(68 digits omitted)...8345"
+                                    "typeIdentifier": "t_rational_5293648966844916762608822285970369504640364643669129958837154304214600321933_by_1",
+                                    "typeString": "int_const 5293...(68 digits omitted)...1933"
                                   },
-                                  "value": "0x05856021785731ee88fc4284cb7a1ab2f73e84199ccb381994f5b0df99c76409"
+                                  "value": "0x0bb4196112f2808a8b060e25c1cf626937c07e2052d3919645661736284d0b8d"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_2497218372532733929417758666148918098908561857824737445007932963106255758345_by_1",
-                                    "typeString": "int_const 2497...(68 digits omitted)...8345"
+                                    "typeIdentifier": "t_rational_5293648966844916762608822285970369504640364643669129958837154304214600321933_by_1",
+                                    "typeString": "int_const 5293...(68 digits omitted)...1933"
                                   }
                                 ],
                                 "id": 9852,
@@ -31820,7 +31820,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830623532646236666230356335396564663865626335643632373362626231643161616530633236353434646661393331383532353031393739656436333362",
+                                  "hexValue": "307832636638303835373134376166363438333266633362633931343163313063313533326666343263383530393165316235356437326538346637386466306436",
                                   "id": 9865,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31831,17 +31831,17 @@
                                   "src": "21790:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_5121837287304739424069889365154714291266485844731170401832193502172419023675_by_1",
-                                    "typeString": "int_const 5121...(68 digits omitted)...3675"
+                                    "typeIdentifier": "t_rational_20340000971371724251108691226181288055249112050537124579365562719930644558038_by_1",
+                                    "typeString": "int_const 2034...(69 digits omitted)...8038"
                                   },
-                                  "value": "0x0b52db6fb05c59edf8ebc5d6273bbb1d1aae0c26544dfa931852501979ed633b"
+                                  "value": "0x2cf80857147af64832fc3bc9141c10c1532ff42c85091e1b55d72e84f78df0d6"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_5121837287304739424069889365154714291266485844731170401832193502172419023675_by_1",
-                                    "typeString": "int_const 5121...(68 digits omitted)...3675"
+                                    "typeIdentifier": "t_rational_20340000971371724251108691226181288055249112050537124579365562719930644558038_by_1",
+                                    "typeString": "int_const 2034...(69 digits omitted)...8038"
                                   }
                                 ],
                                 "id": 9864,
@@ -31876,7 +31876,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830653338326336383834373765316537363662336531326539376539373234643564633739323934653438363936623238643463363737343463653836306335",
+                                  "hexValue": "307832323231626664653531333161633163643032316236323234666562393832333862356230316366353736333835383931353135623935356136316465343665",
                                   "id": 9868,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31887,17 +31887,17 @@
                                   "src": "21867:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_6431629810417570402574964115493492974563230503793065515282185437097486737605_by_1",
-                                    "typeString": "int_const 6431...(68 digits omitted)...7605"
+                                    "typeIdentifier": "t_rational_15438267032179870622880856828626456928995498485450531099770651192423320773742_by_1",
+                                    "typeString": "int_const 1543...(69 digits omitted)...3742"
                                   },
-                                  "value": "0x0e382c688477e1e766b3e12e97e9724d5dc79294e48696b28d4c67744ce860c5"
+                                  "value": "0x2221bfde5131ac1cd021b6224feb98238b5b01cf576385891515b955a61de46e"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_6431629810417570402574964115493492974563230503793065515282185437097486737605_by_1",
-                                    "typeString": "int_const 6431...(68 digits omitted)...7605"
+                                    "typeIdentifier": "t_rational_15438267032179870622880856828626456928995498485450531099770651192423320773742_by_1",
+                                    "typeString": "int_const 1543...(69 digits omitted)...3742"
                                   }
                                 ],
                                 "id": 9867,
@@ -31949,7 +31949,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307831633463623937363737656161613965386166326330643831643230303237643463363263653035623436613566666662323461346661663838663537373932",
+                                  "hexValue": "307831323735376235623333386336613830323338333166396562626438626661363631363464343832333763306636316561633064633664343834303738313934",
                                   "id": 9872,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -31960,17 +31960,17 @@
                                   "src": "21946:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_12800320154231177961395773586751302551141042128681195301832218412547275323282_by_1",
-                                    "typeString": "int_const 1280...(69 digits omitted)...3282"
+                                    "typeIdentifier": "t_rational_8349203754662358581710285436805716244628026228168041961457736542403772776852_by_1",
+                                    "typeString": "int_const 8349...(68 digits omitted)...6852"
                                   },
-                                  "value": "0x1c4cb97677eaaa9e8af2c0d81d20027d4c62ce05b46a5fffb24a4faf88f57792"
+                                  "value": "0x12757b5b338c6a8023831f9ebbd8bfa66164d48237c0f61eac0dc6d484078194"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_12800320154231177961395773586751302551141042128681195301832218412547275323282_by_1",
-                                    "typeString": "int_const 1280...(69 digits omitted)...3282"
+                                    "typeIdentifier": "t_rational_8349203754662358581710285436805716244628026228168041961457736542403772776852_by_1",
+                                    "typeString": "int_const 8349...(68 digits omitted)...6852"
                                   }
                                 ],
                                 "id": 9871,
@@ -32005,7 +32005,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307831663263323861366530656435623333313630333463343333323337616236306237386665306166323966383634663263663666303864393731303632326134",
+                                  "hexValue": "307831366439373764653532363937623461626436303633323839343131626666333530646433316531396230626234663139633330653362363664626532626163",
                                   "id": 9875,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -32016,17 +32016,17 @@
                                   "src": "22023:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_14099720145824121350444479018536460534124335780310123732411155341360020988580_by_1",
-                                    "typeString": "int_const 1409...(69 digits omitted)...8580"
+                                    "typeIdentifier": "t_rational_10335115783491198662245288064550936796209171045269083992872145571007407467436_by_1",
+                                    "typeString": "int_const 1033...(69 digits omitted)...7436"
                                   },
-                                  "value": "0x1f2c28a6e0ed5b3316034c433237ab60b78fe0af29f864f2cf6f08d9710622a4"
+                                  "value": "0x16d977de52697b4abd6063289411bff350dd31e19b0bb4f19c30e3b66dbe2bac"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_14099720145824121350444479018536460534124335780310123732411155341360020988580_by_1",
-                                    "typeString": "int_const 1409...(69 digits omitted)...8580"
+                                    "typeIdentifier": "t_rational_10335115783491198662245288064550936796209171045269083992872145571007407467436_by_1",
+                                    "typeString": "int_const 1033...(69 digits omitted)...7436"
                                   }
                                 ],
                                 "id": 9874,
@@ -32338,7 +32338,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307832376631353864623037613539346663643464326130393238343762383537363636316564633565346633636636633238373630326136646234353762316632",
+                              "hexValue": "307831666666663961666630303363616665616565646534316633383138353535333561373338613431656137633334653039633235343835663064306334373135",
                               "id": 9899,
                               "isConstant": false,
                               "isLValue": false,
@@ -32349,17 +32349,17 @@
                               "src": "22191:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_18066624496071119964140612895650782951993818844837854372755829957998144893426_by_1",
-                                "typeString": "int_const 1806...(69 digits omitted)...3426"
+                                "typeIdentifier": "t_rational_14473967585707273974391574992331184314259399147191358694838833051404014995221_by_1",
+                                "typeString": "int_const 1447...(69 digits omitted)...5221"
                               },
-                              "value": "0x27f158db07a594fcd4d2a092847b8576661edc5e4f3cf6c287602a6db457b1f2"
+                              "value": "0x1ffff9aff003cafeaeede41f381855535a738a41ea7c34e09c25485f0d0c4715"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_18066624496071119964140612895650782951993818844837854372755829957998144893426_by_1",
-                                "typeString": "int_const 1806...(69 digits omitted)...3426"
+                                "typeIdentifier": "t_rational_14473967585707273974391574992331184314259399147191358694838833051404014995221_by_1",
+                                "typeString": "int_const 1447...(69 digits omitted)...5221"
                               }
                             ],
                             "id": 9898,
@@ -32394,7 +32394,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307832653435386235363033346461623035623263656165616531316239623339343739353232373936383531313834626161346139316339396539313335333732",
+                              "hexValue": "307830643963396435656163623531666631633737303337653762393736306236376432336662353238613764633962326636666335663263653763633331373236",
                               "id": 9902,
                               "isConstant": false,
                               "isLValue": false,
@@ -32405,17 +32405,17 @@
                               "src": "22268:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_20929265143945467307145159945409894620275254113479161275381630829132864770930_by_1",
-                                "typeString": "int_const 2092...(69 digits omitted)...0930"
+                                "typeIdentifier": "t_rational_6156781300287548415904701577807921748009102493461193366902107501919033562918_by_1",
+                                "typeString": "int_const 6156...(68 digits omitted)...2918"
                               },
-                              "value": "0x2e458b56034dab05b2ceaeae11b9b39479522796851184baa4a91c99e9135372"
+                              "value": "0x0d9c9d5eacb51ff1c77037e7b9760b67d23fb528a7dc9b2f6fc5f2ce7cc31726"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_20929265143945467307145159945409894620275254113479161275381630829132864770930_by_1",
-                                "typeString": "int_const 2092...(69 digits omitted)...0930"
+                                "typeIdentifier": "t_rational_6156781300287548415904701577807921748009102493461193366902107501919033562918_by_1",
+                                "typeString": "int_const 6156...(68 digits omitted)...2918"
                               }
                             ],
                             "id": 9901,
@@ -32587,7 +32587,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307830363230373562343935393739383964636232376564616239393631343165636437646132333766633464623231373665343735373235376635663036623364",
+                              "hexValue": "307832613733393535343532613638653030376162333839343963336536613035636366363930366436663336306539366566323131633735663865393532393035",
                               "id": 9915,
                               "isConstant": false,
                               "isLValue": false,
@@ -32598,17 +32598,17 @@
                               "src": "22387:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_2771228570439375712587869453608429063573220099219612412049062365212313676605_by_1",
-                                "typeString": "int_const 2771...(68 digits omitted)...6605"
+                                "typeIdentifier": "t_rational_19201357686492018888401196063050971066648048036103217566194098605854966491397_by_1",
+                                "typeString": "int_const 1920...(69 digits omitted)...1397"
                               },
-                              "value": "0x062075b49597989dcb27edab996141ecd7da237fc4db2176e4757257f5f06b3d"
+                              "value": "0x2a73955452a68e007ab38949c3e6a05ccf6906d6f360e96ef211c75f8e952905"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_2771228570439375712587869453608429063573220099219612412049062365212313676605_by_1",
-                                "typeString": "int_const 2771...(68 digits omitted)...6605"
+                                "typeIdentifier": "t_rational_19201357686492018888401196063050971066648048036103217566194098605854966491397_by_1",
+                                "typeString": "int_const 1920...(69 digits omitted)...1397"
                               }
                             ],
                             "id": 9914,
@@ -32643,7 +32643,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307831366665336466313764623033646663643732643132313936363533363064346532353538396665613738306465616361373362653363636663643935653463",
+                              "hexValue": "307832623363393336343732336330356632646631383833346261616331653661313730643337303863613334363934346163393166316537636562346633613338",
                               "id": 9918,
                               "isConstant": false,
                               "isLValue": false,
@@ -32654,17 +32654,17 @@
                               "src": "22464:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_10400089340396409441040733219184591100177794245185008926964729604972857613900_by_1",
-                                "typeString": "int_const 1040...(69 digits omitted)...3900"
+                                "typeIdentifier": "t_rational_19556480577705096065563139703386162984144130470264893571748005652971115199032_by_1",
+                                "typeString": "int_const 1955...(69 digits omitted)...9032"
                               },
-                              "value": "0x16fe3df17db03dfcd72d1219665360d4e25589fea780deaca73be3ccfcd95e4c"
+                              "value": "0x2b3c9364723c05f2df18834baac1e6a170d3708ca346944ac91f1e7ceb4f3a38"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_10400089340396409441040733219184591100177794245185008926964729604972857613900_by_1",
-                                "typeString": "int_const 1040...(69 digits omitted)...3900"
+                                "typeIdentifier": "t_rational_19556480577705096065563139703386162984144130470264893571748005652971115199032_by_1",
+                                "typeString": "int_const 1955...(69 digits omitted)...9032"
                               }
                             ],
                             "id": 9917,
@@ -32836,7 +32836,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307831363966326136336336656462376162323765346635383063663461303966663231323435313734333239633364343962646136626436623866333630613261",
+                              "hexValue": "307831636135326466346536373165376637646130626165343531356362633330376435353834656161383637346630383332613564643964666664306165396536",
                               "id": 9931,
                               "isConstant": false,
                               "isLValue": false,
@@ -32847,17 +32847,17 @@
                               "src": "22583:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_10232103915462533943629595461707205327551231653491944255648209764850639178282_by_1",
-                                "typeString": "int_const 1023...(69 digits omitted)...8282"
+                                "typeIdentifier": "t_rational_12956606707101169994952157753510673009972792313360588793925314891064577550822_by_1",
+                                "typeString": "int_const 1295...(69 digits omitted)...0822"
                               },
-                              "value": "0x169f2a63c6edb7ab27e4f580cf4a09ff21245174329c3d49bda6bd6b8f360a2a"
+                              "value": "0x1ca52df4e671e7f7da0bae4515cbc307d5584eaa8674f0832a5dd9dffd0ae9e6"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_10232103915462533943629595461707205327551231653491944255648209764850639178282_by_1",
-                                "typeString": "int_const 1023...(69 digits omitted)...8282"
+                                "typeIdentifier": "t_rational_12956606707101169994952157753510673009972792313360588793925314891064577550822_by_1",
+                                "typeString": "int_const 1295...(69 digits omitted)...0822"
                               }
                             ],
                             "id": 9930,
@@ -32892,7 +32892,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307830323136666561626537623036623932366131666432363037623738653066323030366562333836616236646366613535363734613462396261353163666531",
+                              "hexValue": "307832623233663161316637303434336335626330393363666335303863646138353864323534663237656632383866366133383032346337386239306564646135",
                               "id": 9934,
                               "isConstant": false,
                               "isLValue": false,
@@ -32903,17 +32903,17 @@
                               "src": "22660:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_945254010714336555347486811690131087485674627521765302962915541638817370081_by_1",
-                                "typeString": "int_const 9452...(67 digits omitted)...0081"
+                                "typeIdentifier": "t_rational_19512959823782578541453717995298519698135638874176002966444959149515634302373_by_1",
+                                "typeString": "int_const 1951...(69 digits omitted)...2373"
                               },
-                              "value": "0x0216feabe7b06b926a1fd2607b78e0f2006eb386ab6dcfa55674a4b9ba51cfe1"
+                              "value": "0x2b23f1a1f70443c5bc093cfc508cda858d254f27ef288f6a38024c78b90edda5"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_945254010714336555347486811690131087485674627521765302962915541638817370081_by_1",
-                                "typeString": "int_const 9452...(67 digits omitted)...0081"
+                                "typeIdentifier": "t_rational_19512959823782578541453717995298519698135638874176002966444959149515634302373_by_1",
+                                "typeString": "int_const 1951...(69 digits omitted)...2373"
                               }
                             ],
                             "id": 9933,
@@ -67402,7 +67402,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307832393161356637393866396539396532376338336665336464363334666462633939633632363564386231376634386234666338333830303439656163366662",
+                              "hexValue": "307831616234336633396665353038383839396233386264616437666333373731393136646366326536646464303666636136373937346661366532383564653530",
                               "id": 9807,
                               "isConstant": false,
                               "isLValue": false,
@@ -67413,17 +67413,17 @@
                               "src": "20907:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_18591423758779554166479420502077874668014157396054049380330793952958244112123_by_1",
-                                "typeString": "int_const 1859...(69 digits omitted)...2123"
+                                "typeIdentifier": "t_rational_12078602908344294692439428556089630859064049382573092770935127084475640831568_by_1",
+                                "typeString": "int_const 1207...(69 digits omitted)...1568"
                               },
-                              "value": "0x291a5f798f9e99e27c83fe3dd634fdbc99c6265d8b17f48b4fc8380049eac6fb"
+                              "value": "0x1ab43f39fe5088899b38bdad7fc3771916dcf2e6ddd06fca67974fa6e285de50"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_18591423758779554166479420502077874668014157396054049380330793952958244112123_by_1",
-                                "typeString": "int_const 1859...(69 digits omitted)...2123"
+                                "typeIdentifier": "t_rational_12078602908344294692439428556089630859064049382573092770935127084475640831568_by_1",
+                                "typeString": "int_const 1207...(69 digits omitted)...1568"
                               }
                             ],
                             "id": 9806,
@@ -67458,7 +67458,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307831613334626631636230353638396536313964633930353631313934366631366138363232383538363263363035363532303634336363653864333465343630",
+                              "hexValue": "307830363938636337643165383132376136366137613539316462663234636230626530666638616537353937646338656161646537323530333931373163616639",
                               "id": 9810,
                               "isConstant": false,
                               "isLValue": false,
@@ -67469,17 +67469,17 @@
                               "src": "20984:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_11853329117534709037274131365992968315946788182023844848890876675736571536480_by_1",
-                                "typeString": "int_const 1185...(69 digits omitted)...6480"
+                                "typeIdentifier": "t_rational_2983849174806491404402986933569368453372896623835816890807179126779082296057_by_1",
+                                "typeString": "int_const 2983...(68 digits omitted)...6057"
                               },
-                              "value": "0x1a34bf1cb05689e619dc905611946f16a862285862c6056520643cce8d34e460"
+                              "value": "0x0698cc7d1e8127a66a7a591dbf24cb0be0ff8ae7597dc8eaade725039171caf9"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_11853329117534709037274131365992968315946788182023844848890876675736571536480_by_1",
-                                "typeString": "int_const 1185...(69 digits omitted)...6480"
+                                "typeIdentifier": "t_rational_2983849174806491404402986933569368453372896623835816890807179126779082296057_by_1",
+                                "typeString": "int_const 2983...(68 digits omitted)...6057"
                               }
                             ],
                             "id": 9809,
@@ -67622,7 +67622,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307832653339666535616236656532636138333966373936633836316163336439613930633034626365626239333437666337373435363037646561623538323037",
+                                  "hexValue": "307832303930386135356232623938306438623839373436326531363863616138366633346461333063626265373231653062356462393261666638373265373731",
                                   "id": 9821,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -67633,17 +67633,17 @@
                                   "src": "21094:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_20908856806754722984805158201077746839868922775286403179729730499583415779847_by_1",
-                                    "typeString": "int_const 2090...(69 digits omitted)...9847"
+                                    "typeIdentifier": "t_rational_14729391883405835128242497571598885654589229607535514558550462285082189293425_by_1",
+                                    "typeString": "int_const 1472...(69 digits omitted)...3425"
                                   },
-                                  "value": "0x2e39fe5ab6ee2ca839f796c861ac3d9a90c04bcebb9347fc7745607deab58207"
+                                  "value": "0x20908a55b2b980d8b897462e168caa86f34da30cbbe721e0b5db92aff872e771"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_20908856806754722984805158201077746839868922775286403179729730499583415779847_by_1",
-                                    "typeString": "int_const 2090...(69 digits omitted)...9847"
+                                    "typeIdentifier": "t_rational_14729391883405835128242497571598885654589229607535514558550462285082189293425_by_1",
+                                    "typeString": "int_const 1472...(69 digits omitted)...3425"
                                   }
                                 ],
                                 "id": 9820,
@@ -67678,7 +67678,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307832376130643232346230666534666239616432313033363032383336316337656232633262343839653236393661363563383363653936386633336533393564",
+                                  "hexValue": "307832363830356133643136316362373866333138323932376331336332656439386437373866383566376166613933393737393830396237323535396565643461",
                                   "id": 9824,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -67689,17 +67689,17 @@
                                   "src": "21171:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_17924346981042417661781752395694706535587703820605159195899633742324252424541_by_1",
-                                    "typeString": "int_const 1792...(69 digits omitted)...4541"
+                                    "typeIdentifier": "t_rational_17414667474512397716414013711935394921005113795675289094769365326583331482954_by_1",
+                                    "typeString": "int_const 1741...(69 digits omitted)...2954"
                                   },
-                                  "value": "0x27a0d224b0fe4fb9ad21036028361c7eb2c2b489e2696a65c83ce968f33e395d"
+                                  "value": "0x26805a3d161cb78f3182927c13c2ed98d778f85f7afa939779809b72559eed4a"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_17924346981042417661781752395694706535587703820605159195899633742324252424541_by_1",
-                                    "typeString": "int_const 1792...(69 digits omitted)...4541"
+                                    "typeIdentifier": "t_rational_17414667474512397716414013711935394921005113795675289094769365326583331482954_by_1",
+                                    "typeString": "int_const 1741...(69 digits omitted)...2954"
                                   }
                                 ],
                                 "id": 9823,
@@ -67751,7 +67751,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830623231383363656164303061326561316635656434313431653032383638303236383566366531623531626563653138646630663831303635306137383837",
+                                  "hexValue": "307832353865343936613665336664616336346161343739656239323737643032383839336262646661326332626536353438643966333937376165386365373832",
                                   "id": 9828,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -67762,17 +67762,17 @@
                                   "src": "21250:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_5034656988293348204105336117277684374117967420941757403146970037710937028743_by_1",
-                                    "typeString": "int_const 5034...(68 digits omitted)...8743"
+                                    "typeIdentifier": "t_rational_16986974377627669711247243157844622333429297139327323306844626974440254400386_by_1",
+                                    "typeString": "int_const 1698...(69 digits omitted)...0386"
                                   },
-                                  "value": "0x0b2183cead00a2ea1f5ed4141e0286802685f6e1b51bece18df0f810650a7887"
+                                  "value": "0x258e496a6e3fdac64aa479eb9277d028893bbdfa2c2be6548d9f3977ae8ce782"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_5034656988293348204105336117277684374117967420941757403146970037710937028743_by_1",
-                                    "typeString": "int_const 5034...(68 digits omitted)...8743"
+                                    "typeIdentifier": "t_rational_16986974377627669711247243157844622333429297139327323306844626974440254400386_by_1",
+                                    "typeString": "int_const 1698...(69 digits omitted)...0386"
                                   }
                                 ],
                                 "id": 9827,
@@ -67807,7 +67807,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307831663632633238663935316164336366666561633466626130323435316538633035363030663932326435376164646466303366643563306634303961663762",
+                                  "hexValue": "307831663334663261313732313465613065643930303365386361353535363664393463646135356634356230653763623330356163393635373035323530643436",
                                   "id": 9831,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -67818,17 +67818,17 @@
                                   "src": "21327:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_14196192128195758083558037664648555378766214872011820652589197177113088208763_by_1",
-                                    "typeString": "int_const 1419...(69 digits omitted)...8763"
+                                    "typeIdentifier": "t_rational_14115248928631275642105700721548441727993958219310437630073281368757453000006_by_1",
+                                    "typeString": "int_const 1411...(69 digits omitted)...0006"
                                   },
-                                  "value": "0x1f62c28f951ad3cffeac4fba02451e8c05600f922d57adddf03fd5c0f409af7b"
+                                  "value": "0x1f34f2a17214ea0ed9003e8ca55566d94cda55f45b0e7cb305ac965705250d46"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_14196192128195758083558037664648555378766214872011820652589197177113088208763_by_1",
-                                    "typeString": "int_const 1419...(69 digits omitted)...8763"
+                                    "typeIdentifier": "t_rational_14115248928631275642105700721548441727993958219310437630073281368757453000006_by_1",
+                                    "typeString": "int_const 1411...(69 digits omitted)...0006"
                                   }
                                 ],
                                 "id": 9830,
@@ -67985,7 +67985,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830393862626138353064363338653336393638313431393163623965633861363466346466306330346433346231616633643331386564353466353534383861",
+                                  "hexValue": "307832613635363337643762323338636431616661356462376630313330353066636439326535346361306564633337363333616232613637626464613661333732",
                                   "id": 9843,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -67996,17 +67996,17 @@
                                   "src": "21442:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_4317694691157017250412642689578311298871439314780657905205676451588220471434_by_1",
-                                    "typeString": "int_const 4317...(68 digits omitted)...1434"
+                                    "typeIdentifier": "t_rational_19176277849889507116268885118872732881645203070327673701013685212612714210162_by_1",
+                                    "typeString": "int_const 1917...(69 digits omitted)...0162"
                                   },
-                                  "value": "0x098bba850d638e3696814191cb9ec8a64f4df0c04d34b1af3d318ed54f55488a"
+                                  "value": "0x2a65637d7b238cd1afa5db7f013050fcd92e54ca0edc37633ab2a67bdda6a372"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_4317694691157017250412642689578311298871439314780657905205676451588220471434_by_1",
-                                    "typeString": "int_const 4317...(68 digits omitted)...1434"
+                                    "typeIdentifier": "t_rational_19176277849889507116268885118872732881645203070327673701013685212612714210162_by_1",
+                                    "typeString": "int_const 1917...(69 digits omitted)...0162"
                                   }
                                 ],
                                 "id": 9842,
@@ -68041,7 +68041,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830313533663766346237643636636235366433633131646231613739646333373638633933646330346438326631616231633162663362313538316632323162",
+                                  "hexValue": "307830623032646335376438663633653835646630646233356662353730356138663339663130326137323636336434343465613433383335346331343765376534",
                                   "id": 9846,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68052,17 +68052,17 @@
                                   "src": "21519:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_600672483894874899045613663338272564025724587317639508005662770217783075355_by_1",
-                                    "typeString": "int_const 6006...(67 digits omitted)...5355"
+                                    "typeIdentifier": "t_rational_4980495781105895008070767855747970150994645797180301418459200390724846086116_by_1",
+                                    "typeString": "int_const 4980...(68 digits omitted)...6116"
                                   },
-                                  "value": "0x0153f7f4b7d66cb56d3c11db1a79dc3768c93dc04d82f1ab1c1bf3b1581f221b"
+                                  "value": "0x0b02dc57d8f63e85df0db35fb5705a8f39f102a72663d444ea438354c147e7e4"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_600672483894874899045613663338272564025724587317639508005662770217783075355_by_1",
-                                    "typeString": "int_const 6006...(67 digits omitted)...5355"
+                                    "typeIdentifier": "t_rational_4980495781105895008070767855747970150994645797180301418459200390724846086116_by_1",
+                                    "typeString": "int_const 4980...(68 digits omitted)...6116"
                                   }
                                 ],
                                 "id": 9845,
@@ -68114,7 +68114,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830363465383462366661356661383536306636663763363762336130663165356339333434306334383432386164366461326662303565396436393135353235",
+                                  "hexValue": "307832386161363038643164313138343436353632646237353931386337306631376135313661353063346639323866306665373330656638373631633639373761",
                                   "id": 9850,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68125,17 +68125,17 @@
                                   "src": "21598:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_2852607126147806239960163418061874114679164268951282747000660201142846838053_by_1",
-                                    "typeString": "int_const 2852...(68 digits omitted)...8053"
+                                    "typeIdentifier": "t_rational_18393544316406015243414761577632448766959221032976273979285851892110756059002_by_1",
+                                    "typeString": "int_const 1839...(69 digits omitted)...9002"
                                   },
-                                  "value": "0x064e84b6fa5fa8560f6f7c67b3a0f1e5c93440c48428ad6da2fb05e9d6915525"
+                                  "value": "0x28aa608d1d118446562db75918c70f17a516a50c4f928f0fe730ef8761c6977a"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_2852607126147806239960163418061874114679164268951282747000660201142846838053_by_1",
-                                    "typeString": "int_const 2852...(68 digits omitted)...8053"
+                                    "typeIdentifier": "t_rational_18393544316406015243414761577632448766959221032976273979285851892110756059002_by_1",
+                                    "typeString": "int_const 1839...(69 digits omitted)...9002"
                                   }
                                 ],
                                 "id": 9849,
@@ -68170,7 +68170,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830353835363032313738353733316565383866633432383463623761316162326637336538343139396363623338313939346635623064663939633736343039",
+                                  "hexValue": "307830626234313936313132663238303861386230363065323563316366363236393337633037653230353264333931393634353636313733363238346430623864",
                                   "id": 9853,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68181,17 +68181,17 @@
                                   "src": "21675:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_2497218372532733929417758666148918098908561857824737445007932963106255758345_by_1",
-                                    "typeString": "int_const 2497...(68 digits omitted)...8345"
+                                    "typeIdentifier": "t_rational_5293648966844916762608822285970369504640364643669129958837154304214600321933_by_1",
+                                    "typeString": "int_const 5293...(68 digits omitted)...1933"
                                   },
-                                  "value": "0x05856021785731ee88fc4284cb7a1ab2f73e84199ccb381994f5b0df99c76409"
+                                  "value": "0x0bb4196112f2808a8b060e25c1cf626937c07e2052d3919645661736284d0b8d"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_2497218372532733929417758666148918098908561857824737445007932963106255758345_by_1",
-                                    "typeString": "int_const 2497...(68 digits omitted)...8345"
+                                    "typeIdentifier": "t_rational_5293648966844916762608822285970369504640364643669129958837154304214600321933_by_1",
+                                    "typeString": "int_const 5293...(68 digits omitted)...1933"
                                   }
                                 ],
                                 "id": 9852,
@@ -68348,7 +68348,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830623532646236666230356335396564663865626335643632373362626231643161616530633236353434646661393331383532353031393739656436333362",
+                                  "hexValue": "307832636638303835373134376166363438333266633362633931343163313063313533326666343263383530393165316235356437326538346637386466306436",
                                   "id": 9865,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68359,17 +68359,17 @@
                                   "src": "21790:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_5121837287304739424069889365154714291266485844731170401832193502172419023675_by_1",
-                                    "typeString": "int_const 5121...(68 digits omitted)...3675"
+                                    "typeIdentifier": "t_rational_20340000971371724251108691226181288055249112050537124579365562719930644558038_by_1",
+                                    "typeString": "int_const 2034...(69 digits omitted)...8038"
                                   },
-                                  "value": "0x0b52db6fb05c59edf8ebc5d6273bbb1d1aae0c26544dfa931852501979ed633b"
+                                  "value": "0x2cf80857147af64832fc3bc9141c10c1532ff42c85091e1b55d72e84f78df0d6"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_5121837287304739424069889365154714291266485844731170401832193502172419023675_by_1",
-                                    "typeString": "int_const 5121...(68 digits omitted)...3675"
+                                    "typeIdentifier": "t_rational_20340000971371724251108691226181288055249112050537124579365562719930644558038_by_1",
+                                    "typeString": "int_const 2034...(69 digits omitted)...8038"
                                   }
                                 ],
                                 "id": 9864,
@@ -68404,7 +68404,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307830653338326336383834373765316537363662336531326539376539373234643564633739323934653438363936623238643463363737343463653836306335",
+                                  "hexValue": "307832323231626664653531333161633163643032316236323234666562393832333862356230316366353736333835383931353135623935356136316465343665",
                                   "id": 9868,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68415,17 +68415,17 @@
                                   "src": "21867:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_6431629810417570402574964115493492974563230503793065515282185437097486737605_by_1",
-                                    "typeString": "int_const 6431...(68 digits omitted)...7605"
+                                    "typeIdentifier": "t_rational_15438267032179870622880856828626456928995498485450531099770651192423320773742_by_1",
+                                    "typeString": "int_const 1543...(69 digits omitted)...3742"
                                   },
-                                  "value": "0x0e382c688477e1e766b3e12e97e9724d5dc79294e48696b28d4c67744ce860c5"
+                                  "value": "0x2221bfde5131ac1cd021b6224feb98238b5b01cf576385891515b955a61de46e"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_6431629810417570402574964115493492974563230503793065515282185437097486737605_by_1",
-                                    "typeString": "int_const 6431...(68 digits omitted)...7605"
+                                    "typeIdentifier": "t_rational_15438267032179870622880856828626456928995498485450531099770651192423320773742_by_1",
+                                    "typeString": "int_const 1543...(69 digits omitted)...3742"
                                   }
                                 ],
                                 "id": 9867,
@@ -68477,7 +68477,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307831633463623937363737656161613965386166326330643831643230303237643463363263653035623436613566666662323461346661663838663537373932",
+                                  "hexValue": "307831323735376235623333386336613830323338333166396562626438626661363631363464343832333763306636316561633064633664343834303738313934",
                                   "id": 9872,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68488,17 +68488,17 @@
                                   "src": "21946:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_12800320154231177961395773586751302551141042128681195301832218412547275323282_by_1",
-                                    "typeString": "int_const 1280...(69 digits omitted)...3282"
+                                    "typeIdentifier": "t_rational_8349203754662358581710285436805716244628026228168041961457736542403772776852_by_1",
+                                    "typeString": "int_const 8349...(68 digits omitted)...6852"
                                   },
-                                  "value": "0x1c4cb97677eaaa9e8af2c0d81d20027d4c62ce05b46a5fffb24a4faf88f57792"
+                                  "value": "0x12757b5b338c6a8023831f9ebbd8bfa66164d48237c0f61eac0dc6d484078194"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_12800320154231177961395773586751302551141042128681195301832218412547275323282_by_1",
-                                    "typeString": "int_const 1280...(69 digits omitted)...3282"
+                                    "typeIdentifier": "t_rational_8349203754662358581710285436805716244628026228168041961457736542403772776852_by_1",
+                                    "typeString": "int_const 8349...(68 digits omitted)...6852"
                                   }
                                 ],
                                 "id": 9871,
@@ -68533,7 +68533,7 @@
                               "arguments": [
                                 {
                                   "argumentTypes": null,
-                                  "hexValue": "307831663263323861366530656435623333313630333463343333323337616236306237386665306166323966383634663263663666303864393731303632326134",
+                                  "hexValue": "307831366439373764653532363937623461626436303633323839343131626666333530646433316531396230626234663139633330653362363664626532626163",
                                   "id": 9875,
                                   "isConstant": false,
                                   "isLValue": false,
@@ -68544,17 +68544,17 @@
                                   "src": "22023:66:4",
                                   "subdenomination": null,
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_rational_14099720145824121350444479018536460534124335780310123732411155341360020988580_by_1",
-                                    "typeString": "int_const 1409...(69 digits omitted)...8580"
+                                    "typeIdentifier": "t_rational_10335115783491198662245288064550936796209171045269083992872145571007407467436_by_1",
+                                    "typeString": "int_const 1033...(69 digits omitted)...7436"
                                   },
-                                  "value": "0x1f2c28a6e0ed5b3316034c433237ab60b78fe0af29f864f2cf6f08d9710622a4"
+                                  "value": "0x16d977de52697b4abd6063289411bff350dd31e19b0bb4f19c30e3b66dbe2bac"
                                 }
                               ],
                               "expression": {
                                 "argumentTypes": [
                                   {
-                                    "typeIdentifier": "t_rational_14099720145824121350444479018536460534124335780310123732411155341360020988580_by_1",
-                                    "typeString": "int_const 1409...(69 digits omitted)...8580"
+                                    "typeIdentifier": "t_rational_10335115783491198662245288064550936796209171045269083992872145571007407467436_by_1",
+                                    "typeString": "int_const 1033...(69 digits omitted)...7436"
                                   }
                                 ],
                                 "id": 9874,
@@ -68866,7 +68866,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307832376631353864623037613539346663643464326130393238343762383537363636316564633565346633636636633238373630326136646234353762316632",
+                              "hexValue": "307831666666663961666630303363616665616565646534316633383138353535333561373338613431656137633334653039633235343835663064306334373135",
                               "id": 9899,
                               "isConstant": false,
                               "isLValue": false,
@@ -68877,17 +68877,17 @@
                               "src": "22191:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_18066624496071119964140612895650782951993818844837854372755829957998144893426_by_1",
-                                "typeString": "int_const 1806...(69 digits omitted)...3426"
+                                "typeIdentifier": "t_rational_14473967585707273974391574992331184314259399147191358694838833051404014995221_by_1",
+                                "typeString": "int_const 1447...(69 digits omitted)...5221"
                               },
-                              "value": "0x27f158db07a594fcd4d2a092847b8576661edc5e4f3cf6c287602a6db457b1f2"
+                              "value": "0x1ffff9aff003cafeaeede41f381855535a738a41ea7c34e09c25485f0d0c4715"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_18066624496071119964140612895650782951993818844837854372755829957998144893426_by_1",
-                                "typeString": "int_const 1806...(69 digits omitted)...3426"
+                                "typeIdentifier": "t_rational_14473967585707273974391574992331184314259399147191358694838833051404014995221_by_1",
+                                "typeString": "int_const 1447...(69 digits omitted)...5221"
                               }
                             ],
                             "id": 9898,
@@ -68922,7 +68922,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307832653435386235363033346461623035623263656165616531316239623339343739353232373936383531313834626161346139316339396539313335333732",
+                              "hexValue": "307830643963396435656163623531666631633737303337653762393736306236376432336662353238613764633962326636666335663263653763633331373236",
                               "id": 9902,
                               "isConstant": false,
                               "isLValue": false,
@@ -68933,17 +68933,17 @@
                               "src": "22268:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_20929265143945467307145159945409894620275254113479161275381630829132864770930_by_1",
-                                "typeString": "int_const 2092...(69 digits omitted)...0930"
+                                "typeIdentifier": "t_rational_6156781300287548415904701577807921748009102493461193366902107501919033562918_by_1",
+                                "typeString": "int_const 6156...(68 digits omitted)...2918"
                               },
-                              "value": "0x2e458b56034dab05b2ceaeae11b9b39479522796851184baa4a91c99e9135372"
+                              "value": "0x0d9c9d5eacb51ff1c77037e7b9760b67d23fb528a7dc9b2f6fc5f2ce7cc31726"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_20929265143945467307145159945409894620275254113479161275381630829132864770930_by_1",
-                                "typeString": "int_const 2092...(69 digits omitted)...0930"
+                                "typeIdentifier": "t_rational_6156781300287548415904701577807921748009102493461193366902107501919033562918_by_1",
+                                "typeString": "int_const 6156...(68 digits omitted)...2918"
                               }
                             ],
                             "id": 9901,
@@ -69115,7 +69115,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307830363230373562343935393739383964636232376564616239393631343165636437646132333766633464623231373665343735373235376635663036623364",
+                              "hexValue": "307832613733393535343532613638653030376162333839343963336536613035636366363930366436663336306539366566323131633735663865393532393035",
                               "id": 9915,
                               "isConstant": false,
                               "isLValue": false,
@@ -69126,17 +69126,17 @@
                               "src": "22387:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_2771228570439375712587869453608429063573220099219612412049062365212313676605_by_1",
-                                "typeString": "int_const 2771...(68 digits omitted)...6605"
+                                "typeIdentifier": "t_rational_19201357686492018888401196063050971066648048036103217566194098605854966491397_by_1",
+                                "typeString": "int_const 1920...(69 digits omitted)...1397"
                               },
-                              "value": "0x062075b49597989dcb27edab996141ecd7da237fc4db2176e4757257f5f06b3d"
+                              "value": "0x2a73955452a68e007ab38949c3e6a05ccf6906d6f360e96ef211c75f8e952905"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_2771228570439375712587869453608429063573220099219612412049062365212313676605_by_1",
-                                "typeString": "int_const 2771...(68 digits omitted)...6605"
+                                "typeIdentifier": "t_rational_19201357686492018888401196063050971066648048036103217566194098605854966491397_by_1",
+                                "typeString": "int_const 1920...(69 digits omitted)...1397"
                               }
                             ],
                             "id": 9914,
@@ -69171,7 +69171,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307831366665336466313764623033646663643732643132313936363533363064346532353538396665613738306465616361373362653363636663643935653463",
+                              "hexValue": "307832623363393336343732336330356632646631383833346261616331653661313730643337303863613334363934346163393166316537636562346633613338",
                               "id": 9918,
                               "isConstant": false,
                               "isLValue": false,
@@ -69182,17 +69182,17 @@
                               "src": "22464:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_10400089340396409441040733219184591100177794245185008926964729604972857613900_by_1",
-                                "typeString": "int_const 1040...(69 digits omitted)...3900"
+                                "typeIdentifier": "t_rational_19556480577705096065563139703386162984144130470264893571748005652971115199032_by_1",
+                                "typeString": "int_const 1955...(69 digits omitted)...9032"
                               },
-                              "value": "0x16fe3df17db03dfcd72d1219665360d4e25589fea780deaca73be3ccfcd95e4c"
+                              "value": "0x2b3c9364723c05f2df18834baac1e6a170d3708ca346944ac91f1e7ceb4f3a38"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_10400089340396409441040733219184591100177794245185008926964729604972857613900_by_1",
-                                "typeString": "int_const 1040...(69 digits omitted)...3900"
+                                "typeIdentifier": "t_rational_19556480577705096065563139703386162984144130470264893571748005652971115199032_by_1",
+                                "typeString": "int_const 1955...(69 digits omitted)...9032"
                               }
                             ],
                             "id": 9917,
@@ -69364,7 +69364,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307831363966326136336336656462376162323765346635383063663461303966663231323435313734333239633364343962646136626436623866333630613261",
+                              "hexValue": "307831636135326466346536373165376637646130626165343531356362633330376435353834656161383637346630383332613564643964666664306165396536",
                               "id": 9931,
                               "isConstant": false,
                               "isLValue": false,
@@ -69375,17 +69375,17 @@
                               "src": "22583:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_10232103915462533943629595461707205327551231653491944255648209764850639178282_by_1",
-                                "typeString": "int_const 1023...(69 digits omitted)...8282"
+                                "typeIdentifier": "t_rational_12956606707101169994952157753510673009972792313360588793925314891064577550822_by_1",
+                                "typeString": "int_const 1295...(69 digits omitted)...0822"
                               },
-                              "value": "0x169f2a63c6edb7ab27e4f580cf4a09ff21245174329c3d49bda6bd6b8f360a2a"
+                              "value": "0x1ca52df4e671e7f7da0bae4515cbc307d5584eaa8674f0832a5dd9dffd0ae9e6"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_10232103915462533943629595461707205327551231653491944255648209764850639178282_by_1",
-                                "typeString": "int_const 1023...(69 digits omitted)...8282"
+                                "typeIdentifier": "t_rational_12956606707101169994952157753510673009972792313360588793925314891064577550822_by_1",
+                                "typeString": "int_const 1295...(69 digits omitted)...0822"
                               }
                             ],
                             "id": 9930,
@@ -69420,7 +69420,7 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "hexValue": "307830323136666561626537623036623932366131666432363037623738653066323030366562333836616236646366613535363734613462396261353163666531",
+                              "hexValue": "307832623233663161316637303434336335626330393363666335303863646138353864323534663237656632383866366133383032346337386239306564646135",
                               "id": 9934,
                               "isConstant": false,
                               "isLValue": false,
@@ -69431,17 +69431,17 @@
                               "src": "22660:66:4",
                               "subdenomination": null,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_rational_945254010714336555347486811690131087485674627521765302962915541638817370081_by_1",
-                                "typeString": "int_const 9452...(67 digits omitted)...0081"
+                                "typeIdentifier": "t_rational_19512959823782578541453717995298519698135638874176002966444959149515634302373_by_1",
+                                "typeString": "int_const 1951...(69 digits omitted)...2373"
                               },
-                              "value": "0x0216feabe7b06b926a1fd2607b78e0f2006eb386ab6dcfa55674a4b9ba51cfe1"
+                              "value": "0x2b23f1a1f70443c5bc093cfc508cda858d254f27ef288f6a38024c78b90edda5"
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_rational_945254010714336555347486811690131087485674627521765302962915541638817370081_by_1",
-                                "typeString": "int_const 9452...(67 digits omitted)...0081"
+                                "typeIdentifier": "t_rational_19512959823782578541453717995298519698135638874176002966444959149515634302373_by_1",
+                                "typeString": "int_const 1951...(69 digits omitted)...2373"
                               }
                             ],
                             "id": 9933,
@@ -73070,7 +73070,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-06-30T14:05:30.447Z",
+  "updatedAt": "2019-07-01T12:29:05.298Z",
   "devdoc": {
     "methods": {}
   },

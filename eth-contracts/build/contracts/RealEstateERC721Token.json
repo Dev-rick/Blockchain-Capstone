@@ -29022,12 +29022,12 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x30e100ed0973744ab0baa82F5aFaEF9AdE14d584",
-      "transactionHash": "0x03dc69d1645f4eefcf45ecdc0f29cebf4f56e28fed0d76a68a60f47818953dce"
+      "address": "0x30097547Bb723f7e1AB54298A0a2b6e5035bA8e9",
+      "transactionHash": "0x371a2ab782f29404da4c7ec6fc5b0c822450a11f860c03be623a7c4a50153811"
     }
   },
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-06-30T14:51:52.854Z",
+  "updatedAt": "2019-07-01T12:35:37.388Z",
   "devdoc": {
     "methods": {
       "isApprovedForAll(address,address)": {

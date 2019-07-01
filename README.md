@@ -4,7 +4,7 @@ A decentralized housing product.
 
 Contract address of Verifier.sol: https://ropsten.etherscan.io/address/0xd2eb4347daa8e2eb14d176bb7fe90b25dfdd7836 
 
-Contract address of Real Estate Listing: https://rinkeby.etherscan.io/token/0xf92df594e7d64da542af08db2541a3e35eb5c4aa#balances
+Contract address of Real Estate Listing: https://rinkeby.etherscan.io/token/0x074148e8df9f30f99c1705f846d72d2a350f160c
 
 
 # CAPSTONE PROJECT
@@ -12,7 +12,7 @@ Contract address of Real Estate Listing: https://rinkeby.etherscan.io/token/0xf9
 
 ## Preview
 
-Marketplace: https://rinkeby.opensea.io/assets/real-estate-listing-v3
+Marketplace: https://rinkeby.opensea.io/category/realestatelistingv4
 
 ## Getting Started
 
@@ -55,6 +55,14 @@ These instructions will get you a copy of the Blockchain-Capstone.app and lets y
 4. Edit the **config.js** file in Blockchain-Capstone/server/ to your needs 
 
     Make sure to use the same address as for deploying your smart contract!
+    Make sure to submit always a new solution by open a new terminal and connecting with docker to zokrates in the code folder
+    ```
+    $ docker run -v $PWD:/home/zokrates/code -ti zokrates/zokrates /bin/bash
+    $ cd code
+    $ ../zokrates compute-witness -a 2 4
+    $ ../zokrate generate-proof
+    ```
+    Make sure to change the tokenId in the config folder every time before minting a new one!
 
 
 5. Now launch the server by the following command in a new terminal and wait until every token is mint.

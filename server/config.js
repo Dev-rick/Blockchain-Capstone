@@ -23,13 +23,14 @@ const networkIdDev = 1560520817919;
 // open a terminal in your server directory and run: $ npm run dev
 
 const developmentAccount = {
-    address : '0x27d8d15cbc94527cadf5ec14b69519ae23288b95',
+    address : 'eb56ebc9d1bc1b8651c373cee2b38c7149ee15ab',
     privateKey : '0x9137dc4de37d28802ff9e5ee3fe982f1ca2e5faa52f54a00a6023f546b23e779'
 }
 
 
 const config = {
-    mintTokenAddress : '0xC18dB62c4F02D3c3bB20C80978380C317c521E91', 
+    tokenIds : [0],
+    mintTokenAddress : '27d8d15cbc94527cadf5ec14b69519ae23288b95', 
     contractsConfig : [{
         name : 'SolnSquareVerifier',
         path : '../eth-contracts/build/contracts/',
